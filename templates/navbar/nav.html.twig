@@ -1,0 +1,14 @@
+<nav>
+    {# <img src="{{ asset('img/logo_ezplay.png') }}" alt="Logo EZplay"> #}
+
+    <ul {% if not app.user %}style="display: none"{% endif %}>
+        {# Sous-menu "Se déconnecter" #}
+        <li>
+            <a href="{{ path('app_logout') }}" {% if app.request.pathInfo == '/logout' %}class="menu-current"{% endif %} onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Se déconnecter</a>
+        </li>
+
+        <form id="logout-form" action="{{ path('app_logout') }}" method="post" style="display: none;">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
+        </form>
+    </ul>
+</nav>
