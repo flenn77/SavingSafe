@@ -1,14 +1,41 @@
-<nav>
-    {# <img src="{{ asset('img/logo_ezplay.png') }}" alt="Logo EZplay"> #}
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" {% if not app.user %}style="display: none"{% endif %}>
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Saving Safe</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ path("app_account") }}">Account</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                </li>
+            </ul>
+        </div>
 
-    <ul {% if not app.user %}style="display: none"{% endif %}>
+        <a href="{{ path('app_logout') }}" {% if app.request.pathInfo == '/logout' %}class="menu-current"{% endif %} onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Se déconnecter</a>
+
+        <form id="logout-form" action="{{ path('app_logout') }}" method="post" style="display: none;">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
+        </form>
+    </div>
+
+
+
+
+    {# <ul {% if not app.user %}style="display: none"{% endif %}> #}
         {# Sous-menu "Se déconnecter" #}
-        <li>
+        {# <li>
             <a href="{{ path('app_logout') }}" {% if app.request.pathInfo == '/logout' %}class="menu-current"{% endif %} onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Se déconnecter</a>
         </li>
 
         <form id="logout-form" action="{{ path('app_logout') }}" method="post" style="display: none;">
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
         </form>
-    </ul>
+    </ul> #}
 </nav>
