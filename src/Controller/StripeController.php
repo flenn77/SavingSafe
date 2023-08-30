@@ -33,6 +33,6 @@ class StripeController extends AbstractController
             'success',
             'Paiement Effectué !'
         );
-        return $this->redirectToRoute('app_stripe', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
     }
 }
