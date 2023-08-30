@@ -43,6 +43,8 @@ class RegistrationController extends AbstractController
 
             $entityManager->persist($user);
             $entityManager->flush();
+
+            $request->getSession()->set('recently_registered_user_id', $user->getId());
             
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
