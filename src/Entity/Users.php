@@ -45,10 +45,10 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $postal_code = null;
 
     #[ORM\Column]
-    private ?int $used_space = null;
+    private ?int $used_space = 0;
 
     #[ORM\Column]
-    private ?int $total_space = null;
+    private ?int $total_space = 0;
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
@@ -217,5 +217,10 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isVerified = $isVerified;
 
         return $this;
+    }
+
+    public function isIsVerified(): ?bool
+    {
+        return $this->isVerified;
     }
 }

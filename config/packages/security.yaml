@@ -41,6 +41,7 @@ security:
         - { path: ^/stripe, roles: PUBLIC_ACCESS }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: ROLE_USER }
+        - { path: ^/invoice, roles: PUBLIC_ACCESS }
         
 
 when@test:
