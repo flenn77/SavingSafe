@@ -41,13 +41,16 @@ class RegistrationController extends AbstractController
                 )
             );
 
+            $token = bin2hex(random_bytes(32));
+            $user->setVerifToken($token);
+
             $entityManager->persist($user);
             $entityManager->flush();
 
             $request->getSession()->set('recently_registered_user_id', $user->getId());
             $request->getSession()->set('recently_registered_full_name', $user->getFullName());
             
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            $this->emailVerifier->sendEmailConfirmation($user,
                 (new TemplatedEmail())
                     ->from(new Address('savinfsage@flennchante.fr', 'Saving Safe'))
                     ->to($user->getEmail())
@@ -68,23 +71,9 @@ class RegistrationController extends AbstractController
     {
         // $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        $id_from_url = $request->query->get('signature');
-
-        dump($id_from_url); 
-
-        $userRepository = $entityManager->getRepository(Users::class);
-        $user = $userRepository->find($id_from_url);
-
-        dump($user);
-
-        if ($user === null) {
-            $this->addFlash('error', 'Utilisateur invalide.');
-            return $this->redirectToRoute('app_login');
-        }
-
         // validate email confirmation link, sets User::isVerified=true and persists
         try {
-            $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
+            $this->emailVerifier->handleEmailConfirmation($request);
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
 

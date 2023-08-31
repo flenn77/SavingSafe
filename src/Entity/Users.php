@@ -44,14 +44,17 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 6)]
     private ?string $postal_code = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true, type: "integer")]
     private ?int $used_space = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true, type: "integer")]
     private ?int $total_space = null;
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $verifToken = null;
 
     public function getId(): ?int
     {
@@ -215,6 +218,18 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getVerifToken(): ?string
+    {
+        return $this->verifToken;
+    }
+
+    public function setVerifToken(?string $verifToken): static
+    {
+        $this->verifToken = $verifToken;
 
         return $this;
     }
