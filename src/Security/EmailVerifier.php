@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Entity\Users;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,8 +28,11 @@ class EmailVerifier
             $user->getEmail()
         );
 
+        $signedUrl = $signatureComponents->getSignedUrl();
+        $signedUrlWithToken = $signedUrl . "&tokenverif=" . $user->getVerifToken();
+
         $context = $email->getContext();
-        $context['signedUrl'] = $signatureComponents->getSignedUrl();
+        $context['signedUrl'] = $signedUrlWithToken;
         $context['expiresAtMessageKey'] = $signatureComponents->getExpirationMessageKey();
         $context['expiresAtMessageData'] = $signatureComponents->getExpirationMessageData();
 
@@ -40,14 +44,31 @@ class EmailVerifier
     /**
      * @throws VerifyEmailExceptionInterface
      */
-    public function handleEmailConfirmation(Request $request, UserInterface $user): void
+    public function handleEmailConfirmation(Request $request): void
     {
-        $this->verifyEmailHelper->validateEmailConfirmation($request->getUri(), $user->getId(), $user->getEmail());
+        // Récupération du token depuis l'URL
+        $tokenFromRequest = $request->get('tokenverif');
 
+        if (!$tokenFromRequest) {
+            throw new \Exception('Token absent dans l\'URL.'); // Vous pouvez ici déclencher une exception plus spécifique
+        }
+
+        // Récupération de l'utilisateur par le token (assurez-vous d'ajouter cette méthode dans votre Repository)
+        $user = $this->entityManager->getRepository(Users::class)->findOneBy(['verifToken' => $tokenFromRequest]);
+
+        // dd($user);
+
+        if (!$user) {
+            throw new \Exception('Utilisateur non trouvé avec le token fourni.'); // Vous pouvez ici déclencher une exception plus spécifique
+        }
+
+        // Mark the user as verified
         $user->setIsVerified(true);
+
+        // Nettoyer le token
+        $user->setVerifToken(null);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
-
     }
 }
