@@ -39,40 +39,67 @@ class InvoiceController extends AbstractController
     public function showInvoice($id, EntityManagerInterface $entityManager): Response
     {
         $invoice = $entityManager->getRepository(Invoice::class)->find($id);
-
+    
         if (!$invoice) {
             throw $this->createNotFoundException('No invoice found for id ' . $id);
         }
-
+    
+        // Récupère l'utilisateur connecté
+        $currentUser = $this->getUser();
+    
+        // Vérifie si l'utilisateur connecté est le propriétaire de la facture
+        if ($invoice->getUser() !== $currentUser) {
+            // Ajoute un message flash d'erreur
+            $this->addFlash('error', 'Vous n\'avez pas le droit d\'accéder à cette facture.');
+    
+            // Redirige vers la liste des factures de l'utilisateur
+            return $this->redirectToRoute('user_invoices');
+        }
+    
         return $this->render('invoice.html.twig', [
             'invoice' => $invoice
         ]);
     }
+    
+
 
     #[Route('/invoice/{id}/pdf', name: 'invoice_pdf')]
-    public function generatePdf($id, EntityManagerInterface $entityManager): Response
-    {
-        $invoice = $entityManager->getRepository(Invoice::class)->find($id);
+public function generatePdf($id, EntityManagerInterface $entityManager): Response
+{
+    $invoice = $entityManager->getRepository(Invoice::class)->find($id);
 
-        if (!$invoice) {
-            throw $this->createNotFoundException('No invoice found for id ' . $id);
-        }
-
-        $html = $this->renderView('invoice/details.html.twig', [
-            'invoice' => $invoice,
-        ]);
-
-        $pdfContent = $this->pdf->getOutputFromHtml($html);
-
-        return new Response(
-            $pdfContent,
-            200,
-            [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="invoice_' . $invoice->getInvoiceNumber() . '.pdf"',
-            ]
-        );
+    if (!$invoice) {
+        throw $this->createNotFoundException('No invoice found for id ' . $id);
     }
+
+    // Récupère l'utilisateur connecté
+    $currentUser = $this->getUser();
+
+    // Vérifie si l'utilisateur connecté est le propriétaire de la facture
+    if ($invoice->getUser() !== $currentUser) {
+        // Ajoute un message flash d'erreur
+        $this->addFlash('error', 'Vous n\'avez pas le droit de télécharger cette facture.');
+
+        // Redirige vers la liste des factures de l'utilisateur
+        return $this->redirectToRoute('user_invoices');
+    }
+
+    $html = $this->renderView('invoice/details.html.twig', [
+        'invoice' => $invoice,
+    ]);
+
+    $pdfContent = $this->pdf->getOutputFromHtml($html);
+
+    return new Response(
+        $pdfContent,
+        200,
+        [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="invoice_' . $invoice->getInvoiceNumber() . '.pdf"',
+        ]
+    );
+}
+
 
 
 
