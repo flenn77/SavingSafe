@@ -36,6 +36,7 @@ class EmailVerifier
      */
     public function handleEmailConfirmation(Request $request): void
     {
+        var_dump("test");
         // Récupération du token depuis l'URL
         $tokenFromRequest = $request->get('tokenverif');
 

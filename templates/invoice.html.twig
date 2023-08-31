@@ -1,0 +1,35 @@
+{# templates/invoice.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Facture - {{ invoice.invoiceNumber }}{% endblock %}
+
+{% block body %}
+    <h1>Facture N° {{ invoice.invoiceNumber }}</h1>
+
+    <div>
+        <strong>Nom Complet :</strong> {{ invoice.user.getFullName() }}
+    </div>
+    <div>
+        <strong>Email :</strong> {{ invoice.user.getEmail() }}
+    </div>
+    <div>
+        <strong>Adresse :</strong> {{ invoice.user.getAdress() }} {{ invoice.user.getPostalCode() }} {{ invoice.user.getCity() }}
+    </div>
+    <div>
+        <strong>Téléphone :</strong> {{ invoice.user.getPhoneNumber() }}
+    </div>
+
+    <h2>Détails de la facture</h2>
+
+    <div>
+        <strong>Date de la facture :</strong> {{ invoice.invoiceDate|date('d/m/Y') }}
+    </div>
+    <div>
+        <strong>Montant :</strong> {{ invoice.amount }} €
+    </div>
+
+    <div class="footer">
+        Merci pour votre achat.
+    </div>
+{% endblock %}

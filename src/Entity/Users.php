@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UsersRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -44,17 +46,25 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 6)]
     private ?string $postal_code = null;
 
-    #[ORM\Column(nullable: true, type: "integer")]
-    private ?int $used_space = null;
+    #[ORM\Column]
+    private ?int $used_space = 0;
 
-    #[ORM\Column(nullable: true, type: "integer")]
-    private ?int $total_space = null;
+    #[ORM\Column]
+    private ?int $total_space = 0;
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $verifToken = null;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $verifToken ;
+
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: File::class)]
+    private Collection $files;
+
+    public function __construct()
+    {
+        $this->files = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -230,6 +240,36 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     public function setVerifToken(?string $verifToken): static
     {
         $this->verifToken = $verifToken;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, File>
+     */
+    public function getFiles(): Collection
+    {
+        return $this->files;
+    }
+
+    public function addFile(File $file): static
+    {
+        if (!$this->files->contains($file)) {
+            $this->files->add($file);
+            $file->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFile(File $file): static
+    {
+        if ($this->files->removeElement($file)) {
+            // set the owning side to null (unless already changed)
+            if ($file->getUserId() === $this) {
+                $file->setUserId(null);
+            }
+        }
 
         return $this;
     }
