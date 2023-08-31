@@ -53,6 +53,9 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $verifToken ;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -219,8 +222,15 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isIsVerified(): ?bool
+    public function getVerifToken(): ?string
     {
-        return $this->isVerified;
+        return $this->verifToken;
+    }
+
+    public function setVerifToken(?string $verifToken): static
+    {
+        $this->verifToken = $verifToken;
+
+        return $this;
     }
 }
