@@ -90,17 +90,5 @@ class StripeController extends AbstractController
         }
     }
 
-    #[Route('/invoice/{id}', name: 'app_show_invoice')]
-    public function showInvoice($id, EntityManagerInterface $entityManager): Response
-    {
-        $invoice = $entityManager->getRepository(Invoice::class)->find($id);
-
-        if (!$invoice) {
-            throw $this->createNotFoundException('No invoice found for id ' . $id);
-        }
-
-        return $this->render('invoice.html.twig', [
-            'invoice' => $invoice
-        ]);
-    }
+   
 }
