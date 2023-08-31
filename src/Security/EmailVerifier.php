@@ -24,7 +24,7 @@ class EmailVerifier
     {
 
         $context = $email->getContext();
-        $context['tokenUrl'] = "https://127.0.0.1:8000/verify/email?tokenverif=" . $user->getVerifToken();
+        $context['tokenUrl'] = "http://127.0.0.1:8000/verify/email?tokenverif=" . $user->getVerifToken();
 
         $email->context($context);
 

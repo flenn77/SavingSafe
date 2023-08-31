@@ -19,6 +19,22 @@ class InvoiceController extends AbstractController
         $this->pdf = $pdf;
     }
 
+    // #[Route('/invoice/{id}', name: 'app_show_invoice')]
+    // public function showInvoice($id, EntityManagerInterface $entityManager): Response
+    // {
+    //     $invoice = $entityManager->getRepository(Invoice::class)->find($id);
+
+    //     if (!$invoice) {
+    //         throw $this->createNotFoundException('No invoice found for id ' . $id);
+    //     }
+
+    //     return $this->render('invoice/show.html.twig', [
+    //         'invoice' => $invoice
+    //     ]);
+    // }
+
+
+
     #[Route('/invoice/{id}', name: 'app_show_invoice')]
     public function showInvoice($id, EntityManagerInterface $entityManager): Response
     {
@@ -28,7 +44,7 @@ class InvoiceController extends AbstractController
             throw $this->createNotFoundException('No invoice found for id ' . $id);
         }
 
-        return $this->render('invoice/show.html.twig', [
+        return $this->render('invoice.html.twig', [
             'invoice' => $invoice
         ]);
     }
@@ -57,4 +73,23 @@ class InvoiceController extends AbstractController
             ]
         );
     }
+
+
+
+    #[Route('/user/invoices', name: 'user_invoices')]
+    public function listUserInvoices(EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();  // récupérer l'utilisateur actuellement connecté
+        $invoices = $entityManager->getRepository(Invoice::class)->findBy(['user' => $user]);
+    
+        return $this->render('invoice/list.html.twig', [
+            'invoices' => $invoices,
+        ]);
+    }
+    
+
+
+
+
+
 }

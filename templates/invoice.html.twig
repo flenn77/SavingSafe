@@ -5,31 +5,36 @@
 {% block title %}Facture - {{ invoice.invoiceNumber }}{% endblock %}
 
 {% block body %}
-    <h1>Facture N° {{ invoice.invoiceNumber }}</h1>
 
-    <div>
-        <strong>Nom Complet :</strong> {{ invoice.user.getFullName() }}
-    </div>
-    <div>
-        <strong>Email :</strong> {{ invoice.user.getEmail() }}
-    </div>
-    <div>
-        <strong>Adresse :</strong> {{ invoice.user.getAdress() }} {{ invoice.user.getPostalCode() }} {{ invoice.user.getCity() }}
-    </div>
-    <div>
-        <strong>Téléphone :</strong> {{ invoice.user.getPhoneNumber() }}
-    </div>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Facture N° {{ invoice.invoiceNumber }}</h1>
 
-    <h2>Détails de la facture</h2>
-
-    <div>
-        <strong>Date de la facture :</strong> {{ invoice.invoiceDate|date('d/m/Y') }}
-    </div>
-    <div>
-        <strong>Montant :</strong> {{ invoice.amount }} €
+    <div class="card mb-4">
+        <div class="card-header">
+            Informations du client
+        </div>
+        <div class="card-body">
+            <p><strong>Nom Complet :</strong> {{ invoice.user.getFullName() }}</p>
+            <p><strong>Email :</strong> {{ invoice.user.getEmail() }}</p>
+            <p><strong>Adresse :</strong> {{ invoice.user.getAdress() }}, {{ invoice.user.getPostalCode() }}, {{ invoice.user.getCity() }}</p>
+            <p><strong>Téléphone :</strong> {{ invoice.user.getPhoneNumber() }}</p>
+        </div>
     </div>
 
-    <div class="footer">
-        Merci pour votre achat.
+    <div class="card">
+        <div class="card-header">
+            Détails de la facture
+        </div>
+        <div class="card-body">
+            <p><strong>Date de la facture :</strong> {{ invoice.invoiceDate|date('d/m/Y') }}</p>
+            <p><strong>Montant :</strong> {{ invoice.amount }} €</p>
+        </div>
     </div>
+
+    <!-- Ajout du bouton pour rediriger vers la page des factures de l'utilisateur -->
+    <div class="mt-4 text-center">
+        <a href="{{ path('user_invoices') }}" class="btn btn-primary">Voir toutes mes factures</a>
+    </div>
+</div>
+
 {% endblock %}
