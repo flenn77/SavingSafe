@@ -16,7 +16,7 @@ class File
 
     #[ORM\ManyToOne(inversedBy: 'files')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Users $user_id = null;
+    private ?Users $user = null;
 
     #[ORM\Column(length: 100)]
     private ?string $name = null;
@@ -41,14 +41,14 @@ class File
         return $this->id;
     }
 
-    public function getUserId(): ?Users
+    public function getUser(): ?Users
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(?Users $user_id): static
+    public function setUser(?Users $user): static
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
 
         return $this;
     }

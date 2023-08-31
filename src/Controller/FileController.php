@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use DateTime;
 use SplFileInfo;
 use App\Entity\File;
+use App\Form\AddFileType;
 use App\Repository\FileRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,51 +19,52 @@ class FileController extends AbstractController
     #[Route('/file', name: 'app_file')]
     public function index(Request $request, EntityManagerInterface $entityManager, FileRepository $fileRepository): Response
     {
-        // $file = new File();
-        // $user = $this->getUser();
+        $file = new File();
+        $user = $this->getUser();
         
-        // $form = $this->createForm(AddFileType::class, $file);
-        // $form->handleRequest($request);
+        $form = $this->createForm(AddFileType::class, $file);
+        $form->handleRequest($request);
 
-        // $allFiles = $fileRepository->getFiles();
+        $allFiles = $fileRepository->getFiles();
 
-        // /**
-        //  * Vérification du formulaire et ajout dans la BDD pour l'ajout de médias
-        //  */
+        /**
+         * Vérification du formulaire et ajout dans la BDD pour l'ajout de médias
+         */
 
-        //  if ($form->isSubmitted() && $form->isValid()) {
-        //     /** @var UploadedFile $file */
-        //     $file = $form['file']->getData();
+         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $uploadedFile */
+            $uploadedFile = $form['file']->getData();
 
-        //     $originalFileName = $file->getClientOriginalName();
-        //     $fileMimeType = $file->getMimeType();
+            $originalFileName = $uploadedFile->getClientOriginalName();
+            $fileMimeType = $uploadedFile->getMimeType();
 
-        //     $targetDirectory = $this->getParameter('upload_directory');
-        //     $fileName = md5(uniqid()).'.'.$file->guessExtension();
-        //     $file->move($targetDirectory, $fileName);
+            $targetDirectory = $this->getParameter('upload_directory');
+            $fileName = md5(uniqid()).'.'.$uploadedFile->guessExtension();
+            $uploadedFile->move($targetDirectory, $fileName);
 
-        //     $movedFile = new SplFileInfo($this->getParameter('upload_directory').'/'.$fileName);
+            $movedFile = new SplFileInfo($this->getParameter('upload_directory').'/'.$fileName);
 
 
-        //     // Informations sur le fichier
-        //     $fileSize = $movedFile->getSize();
+            // Informations sur le fichier
+            $fileSize = $movedFile->getSize();
 
-        //     $file->setName($originalFileName);
-        //     $file->setSize($fileSize);
-        //     $file->setOwner($user->getEmail());
-        //     $file->setDate(new DateTime());
-        //     $file->setLastAction(new DateTime());
-        //     $file->setFile($fileName);
-        //     $file->setUser($this->getUser());
+            $file->setName($originalFileName);
+            $file->setSize($fileSize);
+            $file->setOwner($user->getEmail());
+            $file->setDate(new DateTime());
+            $file->setLastAction(new DateTime());
+            $file->setFile($fileName);
+            $file->setUser($this->getUser());
 
-        //     $entityManager->persist($file);
-        //     $entityManager->flush();
+            $entityManager->persist($file);
+            $entityManager->flush();
 
-        //     return $this->redirectToRoute('app_media');
-        // }
+            return $this->redirectToRoute('app_file');
+        }
 
         return $this->render('file/index.html.twig', [
-            'controller_name' => 'FileController',
+            'form' => $form->createView(),
+            'files' => $allFiles,
         ]);
     }
 }

@@ -8,6 +8,7 @@ use Symfony\UX\Dropzone\Form\DropzoneType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Validator\Constraints\File as ConFile;
 
 class AddFileType extends AbstractType
 {
@@ -20,7 +21,7 @@ class AddFileType extends AbstractType
                     'class' => 'dropzone-media'
                 ],
                 'constraints' => [
-                    new File([
+                    new ConFile([
                         'maxSize' => '250M',
                         'mimeTypes' => [
                             'application/pdf',
