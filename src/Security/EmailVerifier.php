@@ -20,21 +20,11 @@ class EmailVerifier
     ) {
     }
 
-    public function sendEmailConfirmation(string $verifyEmailRouteName, UserInterface $user, TemplatedEmail $email): void
+    public function sendEmailConfirmation(UserInterface $user, TemplatedEmail $email): void
     {
-        $signatureComponents = $this->verifyEmailHelper->generateSignature(
-            $verifyEmailRouteName,
-            $user->getId(),
-            $user->getEmail()
-        );
-
-        $signedUrl = $signatureComponents->getSignedUrl();
-        $signedUrlWithToken = $signedUrl . "&tokenverif=" . $user->getVerifToken();
 
         $context = $email->getContext();
-        $context['signedUrl'] = $signedUrlWithToken;
-        $context['expiresAtMessageKey'] = $signatureComponents->getExpirationMessageKey();
-        $context['expiresAtMessageData'] = $signatureComponents->getExpirationMessageData();
+        $context['tokenUrl'] = "https://127.0.0.1:8000/verify/email?tokenverif=" . $user->getVerifToken();
 
         $email->context($context);
 
@@ -55,8 +45,6 @@ class EmailVerifier
 
         // Récupération de l'utilisateur par le token (assurez-vous d'ajouter cette méthode dans votre Repository)
         $user = $this->entityManager->getRepository(Users::class)->findOneBy(['verifToken' => $tokenFromRequest]);
-
-        // dd($user);
 
         if (!$user) {
             throw new \Exception('Utilisateur non trouvé avec le token fourni.'); // Vous pouvez ici déclencher une exception plus spécifique

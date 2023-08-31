@@ -50,7 +50,7 @@ class RegistrationController extends AbstractController
             $request->getSession()->set('recently_registered_user_id', $user->getId());
             $request->getSession()->set('recently_registered_full_name', $user->getFullName());
             
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            $this->emailVerifier->sendEmailConfirmation($user,
                 (new TemplatedEmail())
                     ->from(new Address('savinfsage@flennchante.fr', 'Saving Safe'))
                     ->to($user->getEmail())
