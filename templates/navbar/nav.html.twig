@@ -6,14 +6,14 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{ path("app_account") }}">Account</a>
+                <li class="nav-item {% if app.request.attributes.get('_route') == 'app_account' %}active{% endif %}">
+                    <a class="nav-link" aria-current="page" href="{{ path("app_account") }}">Account</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
+                <li class="nav-item {% if app.request.attributes.get('_route') == 'app_account' %}active{% endif %}">
+                    <a class="nav-link" aria-current="page" href="{{ path("app_stripe") }}">Achat de stockage</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                <li class="nav-item {% if app.request.attributes.get('_route') == 'app_account' %}active{% endif %}">
+                    <a class="nav-link" aria-current="page" href="{{ path("app_file") }}">Fichiers</a>
                 </li>
             </ul>
         </div>

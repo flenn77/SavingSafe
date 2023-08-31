@@ -48,6 +48,7 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
 
             $request->getSession()->set('recently_registered_user_id', $user->getId());
+            $request->getSession()->set('recently_registered_full_name', $user->getFullName());
             
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
@@ -66,7 +67,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
+    public function verifyUserEmail(Request $request, TranslatorInterface $translator, EntityManagerInterface $entityManager): Response
     {
         // $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
