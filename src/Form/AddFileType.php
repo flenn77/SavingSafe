@@ -36,7 +36,6 @@ class AddFileType extends AbstractType
                     ],
                 'translation_domain' => false,
             ])
-            ->add('save', SubmitType::class, ['label' => 'Ajouter le média', 'translation_domain' => false])
         ;
     }
 
