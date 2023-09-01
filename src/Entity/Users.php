@@ -256,7 +256,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->files->contains($file)) {
             $this->files->add($file);
-            $file->setUserId($this);
+            $file->setUser($this);
         }
 
         return $this;
@@ -266,8 +266,8 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->files->removeElement($file)) {
             // set the owning side to null (unless already changed)
-            if ($file->getUserId() === $this) {
-                $file->setUserId(null);
+            if ($file->getUser() === $this) {
+                $file->setUser(null);
             }
         }
 
