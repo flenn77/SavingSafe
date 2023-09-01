@@ -3,11 +3,28 @@
 {% block title %}Fichiers{% endblock %}
 
 {% block body %}
+<div class="container mt-5">
     {% for message in app.flashes('dropzone_success') %}
-        <div class="alert alert-success" data-turbo-cache="false">{{ message }}</div>
+        <div class="alert alert-success" role="alert" data-turbo-cache="false">
+            {{ message }}
+        </div>
     {% endfor %}
 
-    {{ form_start(form) }}
-        {{ form_widget(form.file) }}
-    {{ form_end(form) }}
+    <div class="card">
+        <div class="card-header">
+            Télécharger un fichier
+        </div>
+        <div class="card-body">
+            {{ form_start(form, {'attr': {'class': 'form'}}) }}
+            <div class="mb-3">
+                {{ form_label(form.file, 'Fichier', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.file, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Envoyer</button> {# Bouton "submit" ajouté manuellement. #}
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
 {% endblock %}

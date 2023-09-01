@@ -86,7 +86,7 @@ class StripeController extends AbstractController
                 'error',
                 "Erreur lors de la génération de la facture. L'utilisateur n'a pas été trouvé."
             );
-            return $this->redirectToRoute('app_stripe');
+            return $this->redirectToRoute('user_invoices');
         }
     }
 
