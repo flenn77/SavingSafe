@@ -23,12 +23,22 @@
                         </div>
                         
                         <div class="form-group mb-3">
-                            <label>Prénom et Nom :</label>
-                            {{ form_widget(registrationForm.full_name, {'attr': {'class': 'form-control'}}) }}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Prénom :</label>
+                                    {{ form_widget(registrationForm.first_name, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Nom :</label>
+                                    {{ form_widget(registrationForm.last_name, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </div>
                         </div>
 
                         {{ form_row(registrationForm.phone_number, {'attr': {'class': 'form-control mb-3'}}) }}
-                        
+
+                        <hr>  {# Séparateur entre phone_number et adress #}
+
                         {{ form_row(registrationForm.adress, {'attr': {'class': 'form-control mb-3'}}) }}
                         
                         <div class="form-group mb-3">
@@ -41,6 +51,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        <hr>  {# Séparateur entre city/postal_code et agreeTerms #}
 
                         {{ form_row(registrationForm.plainPassword, {'label': 'Password', 'attr': {'class': 'form-control mb-3'}}) }}
                         

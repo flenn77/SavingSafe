@@ -30,9 +30,12 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+    
+    #[ORM\Column(length: 255)]
+    private ?string $first_name = null;
 
-    #[ORM\Column(length: 100)]
-    private ?string $full_name = null;
+    #[ORM\Column(length: 255)]
+    private ?string $last_name = null;
 
     #[ORM\Column(length: 15)]
     private ?string $phone_number = null;
@@ -136,16 +139,33 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getFullName(): ?string
+    public function getFirstname(): ?string
     {
-        return $this->full_name;
+        return $this->first_name;
     }
 
-    public function setFullName(string $full_name): static
+    public function setFirstname(string $first_name): static
     {
-        $this->full_name = $full_name;
+        $this->first_name = $first_name;
 
         return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->last_name;
+    }
+
+    public function setLastname(string $last_name): static
+    {
+        $this->last_name = $last_name;
+
+        return $this;
+    }
+
+    public function getFullName(): ?string
+    {
+        return $this->first_name .' '. $this->last_name;
     }
 
     public function getPhoneNumber(): ?string
