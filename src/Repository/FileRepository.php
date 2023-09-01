@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\File;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\Users;
+
 
 /**
  * @extends ServiceEntityRepository<File>
@@ -27,6 +29,16 @@ class FileRepository extends ServiceEntityRepository
     public function getFiles(): array
     {
         return $this->findAll();
+    }
+
+    public function deleteFilesForUser(Users $user)
+    {
+        $this->createQueryBuilder('f')
+            ->delete()
+            ->where('f.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->execute();
     }
 
 //    /**

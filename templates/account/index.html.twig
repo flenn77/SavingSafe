@@ -87,11 +87,47 @@
             </div>
         </div>
     </div>
-    
+
     <div class="mb-3 mt-5 text-center">
     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
         Supprimer mon compte
     </button>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="deleteAccountModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmer la suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <h3>Êtes-vous sûr de vouloir supprimer votre compte ?</h3>
+                    <p>Écrire <strong>SUPPRIMER</strong> pour confirmer la supression de votre compte et de tous vos fichiers.</p>
+                    <input type="text" id="confirmDelete" placeholder="Écrire SUPPRIMER">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-danger" id="confirmButton">Confirmer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const confirmButton = document.getElementById('confirmButton');
+            const confirmDelete = document.getElementById('confirmDelete');
+            
+            confirmButton.addEventListener('click', function() {
+                if (confirmDelete.value === 'SUPPRIMER') {
+                    window.location.href = "{{ path('app_account_delete') }}";
+                } else {
+                    alert('Veuillez écrire SUPPRIMER pour confirmer.');
+                }
+            });
+        });
+    </script>
 
 {% endblock %}
