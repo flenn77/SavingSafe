@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Mime\FileinfoMimeTypeGuesser;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -99,7 +101,7 @@ public function download(int $id, FileRepository $fileRepository): Response
 
 
 #[Route('/file/delete/{id}', name: 'file_delete', methods: ['POST'])]
-public function delete(int $id, FileRepository $fileRepository, EntityManagerInterface $entityManager): Response
+public function delete(int $id, FileRepository $fileRepository, EntityManagerInterface $entityManager, File $fileEntity): Response
 {
     $file = $fileRepository->find($id);
 
@@ -109,9 +111,13 @@ public function delete(int $id, FileRepository $fileRepository, EntityManagerInt
     }
 
     // Supprimer le fichier du serveur
-    $filePath = $this->getParameter('upload_directory').'/'.$file->getFile();
-    if (file_exists($filePath)) {
-        unlink($filePath);
+    $fileSystem = new Filesystem();
+    $targetDirectory = $this->getParameter('upload_directory');
+
+    try {
+        $fileSystem->remove($targetDirectory . '/' . $fileEntity->getFile());
+    } catch (IOExceptionInterface $exception) {
+        echo "Erreur lors de la suppression du fichier dans " . $exception->getPath();
     }
 
     // Supprimer le fichier de la base de données
