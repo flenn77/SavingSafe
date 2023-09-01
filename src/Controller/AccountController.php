@@ -17,27 +17,31 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class AccountController extends AbstractController
 {
     #[Route('/', name: 'app_account')]
-    public function index(Request $request, EntityManagerInterface $entityManager, UsersRepository $usersRepository, UserPasswordHasherInterface $userPasswordHasher): Response
-    {
-        $user = $this->getUser();
+public function index(Request $request, EntityManagerInterface $entityManager, UsersRepository $usersRepository, UserPasswordHasherInterface $userPasswordHasher): Response
+{
+    $user = $this->getUser();
 
-        $changePasswordModel = new ChangePasswordModel();
+    $changePasswordModel = new ChangePasswordModel();
 
-        $profileForm = $this->createForm(AccountFormType::class, $user);
-        $changePasswordForm = $this->createForm(ChangePasswordType::class, $changePasswordModel);
+    $profileForm = $this->createForm(AccountFormType::class, $user);
+    $changePasswordForm = $this->createForm(ChangePasswordType::class, $changePasswordModel);
 
-        $profileForm->handleRequest($request);
-        if ($profileForm->isSubmitted() && $profileForm->isValid()) {
+    $profileForm->handleRequest($request);
+    if ($profileForm->isSubmitted()) {
+        if ($profileForm->isValid()) {
             // Save the changes
             $entityManager->flush();
+            $this->addFlash('success', 'Vos informations de profil ont été mises à jour avec succès.');
+        } else {
+            $this->addFlash('error', 'Il y a eu une erreur lors de la mise à jour de votre profil.');
         }
+    }
 
-        $changePasswordForm->handleRequest($request);
-        $isSubmitted = $changePasswordForm->isSubmitted();
-        if ($changePasswordForm->isSubmitted() && $changePasswordForm->isValid()) {
+    $changePasswordForm->handleRequest($request);
+    if ($changePasswordForm->isSubmitted()) {
+        if ($changePasswordForm->isValid()) {
             $isValid = $userPasswordHasher->isPasswordValid($user, $changePasswordModel->old_password);
-            
-            // dd($changePasswordModel->new_password, $changePasswordModel->confirm_new_password, $changePasswordModel->old_password, $isValid);
+
             if ($isValid) {
                 if ($changePasswordModel->new_password === $changePasswordModel->confirm_new_password) {
                     $user->setPassword(
@@ -47,19 +51,22 @@ class AccountController extends AbstractController
                         )
                     );
                     $entityManager->flush();
+                    $this->addFlash('success', 'Votre mot de passe a été modifié avec succès.');
                 } else {
-                    $this->addFlash('error', 'Les mots de passe ne correspondent pas !');
+                    $this->addFlash('error', 'Les mots de passe fournis ne correspondent pas.');
                 }
             } else {
-                $this->addFlash('error', 'Les mots de passe ne correspondent pas !');
+                $this->addFlash('error', 'Votre ancien mot de passe est incorrect.');
             }
+        } else {
+            $this->addFlash('error', 'Il y a eu une erreur lors du changement de votre mot de passe.');
         }
-        
-
-        return $this->render('account/index.html.twig', [
-            'profile_form' => $profileForm->createView(),
-            'change_password_form' => $changePasswordForm->createView(),
-            'isSubmitted' => $isSubmitted,
-        ]);
     }
+
+    return $this->render('account/index.html.twig', [
+        'profile_form' => $profileForm->createView(),
+        'change_password_form' => $changePasswordForm->createView(),
+    ]);
+}
+
 }
