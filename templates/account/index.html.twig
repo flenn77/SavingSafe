@@ -1,20 +1,78 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AccountController!{% endblock %}
+{% block title %}Profil{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="container mt-5">
+        <!-- Profil Form -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Profil</h3>
+            </div>
+            <div class="card-body">
+                {{ form_start(profile_form) }}
+                    <div class="mb-3">
+                        {{ form_label(profile_form.first_name, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(profile_form.first_name, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(profile_form.last_name, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(profile_form.last_name, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(profile_form.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(profile_form.email, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(profile_form.phone_number, 'N° de téléphone', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(profile_form.phone_number, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(profile_form.adress, 'Adresse', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(profile_form.adress, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form_label(profile_form.postal_code, 'Code postal', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(profile_form.postal_code, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form_label(profile_form.city, 'Ville', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(profile_form.city, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <!-- Ajouter d'autres champs de profil ici de la même manière -->
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Changer les informations</button>
+                    </div>
+                {{ form_end(profile_form) }}
+            </div>
+        </div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/wamp64/www/SavingSafe/src/Controller/AccountController.php'|file_link(0) }}">src/Controller/AccountController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/wamp64/www/SavingSafe/templates/account/index.html.twig'|file_link(0) }}">templates/account/index.html.twig</a></code></li>
-    </ul>
-</div>
+        <!-- Change Password Form -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h3>Changer le mot de passe</h3>
+            </div>
+            <div class="card-body">
+                {{ form_start(change_password_form) }}
+                    <div class="mb-3">
+                        {{ form_label(change_password_form.old_password, 'Ancien mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(change_password_form.old_password, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(change_password_form.new_password, 'Nouveau mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(change_password_form.new_password, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(change_password_form.confirm_new_password, 'Confirmer le nouveau mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(change_password_form.confirm_new_password, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Modifier le mot de passe</button>
+                    </div>
+                {{ form_end(change_password_form) }}
+            </div>
+        </div>
+    </div>
 {% endblock %}

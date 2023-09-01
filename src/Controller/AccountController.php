@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\AccountFormType;
 use App\Form\ChangePasswordType;
+use App\Model\ChangePasswordModel;
 use App\Repository\FileRepository;
 use App\Repository\UsersRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,8 +21,10 @@ class AccountController extends AbstractController
     {
         $user = $this->getUser();
 
+        $changePasswordModel = new ChangePasswordModel();
+
         $profileForm = $this->createForm(AccountFormType::class, $user);
-        $changePasswordForm = $this->createForm(ChangePasswordType::class, $user);
+        $changePasswordForm = $this->createForm(ChangePasswordType::class, $changePasswordModel);
 
         $profileForm->handleRequest($request);
         if ($profileForm->isSubmitted() && $profileForm->isValid()) {
@@ -30,27 +33,33 @@ class AccountController extends AbstractController
         }
 
         $changePasswordForm->handleRequest($request);
+        $isSubmitted = $changePasswordForm->isSubmitted();
         if ($changePasswordForm->isSubmitted() && $changePasswordForm->isValid()) {
-            $data = $changePasswordForm->getData();
-
-            // Vérifie que les nouveaux mots de passe correspondent
-            if ($data['new_password'] === $data['confirm_new_password']) {
-                $user->setPassword(
-                    $userPasswordHasher->hashPassword(
-                        $user,
-                        $data['new_password']
-                    )
-                );
-
-                $entityManager->flush();
+            $isValid = $userPasswordHasher->isPasswordValid($user, $changePasswordModel->old_password);
+            
+            // dd($changePasswordModel->new_password, $changePasswordModel->confirm_new_password, $changePasswordModel->old_password, $isValid);
+            if ($isValid) {
+                if ($changePasswordModel->new_password === $changePasswordModel->confirm_new_password) {
+                    $user->setPassword(
+                        $userPasswordHasher->hashPassword(
+                            $user,
+                            $changePasswordModel->new_password
+                        )
+                    );
+                    $entityManager->flush();
+                } else {
+                    $this->addFlash('error', 'Les mots de passe ne correspondent pas !');
+                }
             } else {
-                // Ajouter un message flash ou une autre action pour indiquer que les mots de passe ne correspondent pas
-                $this->addFlash('error', 'New passwords do not match.');
+                $this->addFlash('error', 'Les mots de passe ne correspondent pas !');
             }
         }
+        
 
         return $this->render('account/index.html.twig', [
-            'controller_name' => 'AccountController',
+            'profile_form' => $profileForm->createView(),
+            'change_password_form' => $changePasswordForm->createView(),
+            'isSubmitted' => $isSubmitted,
         ]);
     }
 }
