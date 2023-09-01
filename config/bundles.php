@@ -12,5 +12,5 @@ return [
     Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
     Symfony\UX\Dropzone\DropzoneBundle::class => ['all' => true],
     Knp\Bundle\SnappyBundle\KnpSnappyBundle::class => ['all' => true],
-
+    Symfony\UX\StimulusBundle\StimulusBundle::class => ['all' => true],
 ];
