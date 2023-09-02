@@ -2,17 +2,23 @@
 
 namespace App\Controller;
 
+use App\Entity\File;
 use App\Form\AccountFormType;
 use App\Form\ChangePasswordType;
 use App\Model\ChangePasswordModel;
 use App\Repository\FileRepository;
 use App\Repository\UsersRepository;
+use Symfony\Component\Mime\Address;
 use App\Repository\InvoiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -73,12 +79,26 @@ class AccountController extends AbstractController
     }
 
     #[Route('/delete_account', name: 'app_account_delete')]
-    public function deleteAccount(EntityManagerInterface $entityManager, FileRepository $fileRepository, InvoiceRepository $invoiceRepository, TokenStorageInterface $tokenStorage, SessionInterface $session): Response
+    public function deleteAccount(EntityManagerInterface $entityManager, FileRepository $fileRepository, UsersRepository $usersRepository, InvoiceRepository $invoiceRepository, File $fileEntity, TokenStorageInterface $tokenStorage, SessionInterface $session, MailerInterface $mailer): Response
     {
         $user = $this->getUser();
         if (!$user) {
             // L'utilisateur n'est pas connecté; redirigez vers la page de connexion ou autre.
-            return $this->redirectToRoute('login_route');
+            return $this->redirectToRoute('app_login');
+        }
+
+        $allAdmin = $usersRepository->findAllAdmin();
+
+        $numberOfFiles = $fileRepository->countFilesForUser($user);
+
+        // Supprimer le fichier du serveur
+        $fileSystem = new Filesystem();
+        $targetDirectory = $this->getParameter('upload_directory');
+
+        try {
+            $fileSystem->remove($targetDirectory . '/' . $fileEntity->getFile());
+        } catch (IOExceptionInterface $exception) {
+            echo "Erreur lors de la suppression du fichier dans " . $exception->getPath();
         }
 
         // Supprimer les fichiers et les factures associés à cet utilisateur
@@ -88,6 +108,34 @@ class AccountController extends AbstractController
         // Supprimer le compte utilisateur
         $entityManager->remove($user);
         $entityManager->flush();
+
+        foreach ($allAdmin as $admin) {
+            $email = (new TemplatedEmail())
+                ->from(new Address('savinfsage@flennchante.fr', 'Saving Safe'))
+                ->to($admin->getEmail())
+                ->subject("Suppression de compte d'un utilisateur - Saving Safe")
+                ->htmlTemplate('account/delete_user_account_confirmation_for_admin.html.twig')
+                ->context([
+                    'full_name' => $user->getFullName(),
+                    'emailUser' => $user->getEmail(),
+                    'number_of_files' => $numberOfFiles,
+                ])
+            ;
+
+            $mailer->send($email);
+        }
+
+        $email = (new TemplatedEmail())
+            ->from(new Address('savinfsage@flennchante.fr', 'Saving Safe'))
+            ->to($user->getEmail())
+            ->subject('Suppression de compte avec succès - Saving Safe')
+            ->htmlTemplate('account/delete_account_confirmation.html.twig')
+            ->context([
+                'full_name' => $user->getFullName(),
+            ])
+        ;
+
+        $mailer->send($email);
 
         // Déconnecter l'utilisateur et détruire la session
         $tokenStorage->setToken(null);

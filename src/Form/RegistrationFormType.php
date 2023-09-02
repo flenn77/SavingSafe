@@ -41,7 +41,7 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
             ->add('phone_number')
-            ->add('adress') // Notez que vous avez une petite faute d'orthographe. C'est 'adress' et non 'address'.
+            ->add('adress')
             ->add('city')
             ->add('postal_code')
             ->add('email')
