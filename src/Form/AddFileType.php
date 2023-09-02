@@ -18,7 +18,7 @@ class AddFileType extends AbstractType
             ->add('file', DropzoneType::class, [
                 'attr' => [
                     'placeholder' => 'Déposez vos fichiers ici ou cliquez',
-                    'class' => 'dropzone-media'
+                    'class' => 'dropzone-media',
                 ],
                 'constraints' => [
                     new ConFile([
@@ -28,6 +28,7 @@ class AddFileType extends AbstractType
                             'application/x-pdf',
                             'image/png',
                             'image/jpeg',
+                            'image/jpg',
                             'image/gif',
                             'image/svg+xml',
                         ],

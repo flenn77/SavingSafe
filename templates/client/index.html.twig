@@ -13,6 +13,7 @@
                     <th scope="col">Nom du client</th>
                     <th scope="col">Espace utilisé</th>
                     <th scope="col">Espace total disponible</th>
+                    <th scope="col">Stockage</th>
                     {# <th scope="col">Supprimer</th> #}
                 </tr>
             </thead>
@@ -20,9 +21,15 @@
                 {% for client in allClients %}
                 <tr>
                     <th scope="row">{{ loop.index }}</th>
-                    <td>{{ client.first_name }}</td>
-                    <td>{{ client.used_space }} Octets</td>
-                    <td>{{ client.total_space }} Octets</td>
+                    <td>{{ client.getFullName() }}</td>
+                    <td>{{ client.usedspace / (1024 * 1024 * 1024) }} Go</td>
+                    <td>{{ client.totalspace }} Go</td>
+                    <td>
+                        {% set percentage = ((client.usedspace / (1024 * 1024 * 1024)) / client.totalspace) * 100 %}
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {{ percentage }}%;" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </td>
                     {# <td>
                         <form action="{{ path('file_delete', {'id': file.id}) }}" method="post" onsubmit="return confirmDelete();">
                             <button type="submit" class="btn btn-danger">Supprimer</button>

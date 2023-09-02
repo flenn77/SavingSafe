@@ -12,11 +12,11 @@
                 <li class="nav-item {% if app.request.attributes.get('_route') == 'app_stripe' %}active{% endif %}">
                     <a class="nav-link" aria-current="page" href="{{ path("app_stripe") }}">Espace de stockage</a>
                 </li>
-                {# {% if 'ROLE_ADMIN' in app.user.roles %} #}
+                {% if app.user is defined and app.user.roles is defined and 'ROLE_ADMIN' in app.user.roles %}
                     <li class="nav-item {% if app.request.attributes.get('_route') == 'app_client' %}active{% endif %}">
                         <a class="nav-link" aria-current="page" href="{{ path('app_client') }}">Liste des clients</a>
                     </li>
-                {# {% endif %} #}
+                {% endif %}
                 <li class="nav-item {% if app.request.attributes.get('_route') == 'user_invoices' %}active{% endif %}">
                     <a class="nav-link" aria-current="page" href="{{ path('user_invoices') }}">Mes factures</a>
                 </li>
@@ -35,18 +35,4 @@
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
         </form>
     </div>
-
-
-
-
-    {# <ul {% if not app.user %}style="display: none"{% endif %}> #}
-        {# Sous-menu "Se déconnecter" #}
-        {# <li>
-            <a href="{{ path('app_logout') }}" {% if app.request.pathInfo == '/logout' %}class="menu-current"{% endif %} onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Se déconnecter</a>
-        </li>
-
-        <form id="logout-form" action="{{ path('app_logout') }}" method="post" style="display: none;">
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
-        </form>
-    </ul> #}
 </nav>
