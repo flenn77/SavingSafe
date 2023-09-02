@@ -79,7 +79,7 @@ class AccountController extends AbstractController
     }
 
     #[Route('/delete_account', name: 'app_account_delete')]
-    public function deleteAccount(EntityManagerInterface $entityManager, FileRepository $fileRepository, UsersRepository $usersRepository, InvoiceRepository $invoiceRepository, File $fileEntity, TokenStorageInterface $tokenStorage, SessionInterface $session, MailerInterface $mailer): Response
+    public function deleteAccount(EntityManagerInterface $entityManager, FileRepository $fileRepository, UsersRepository $usersRepository, InvoiceRepository $invoiceRepository, TokenStorageInterface $tokenStorage, SessionInterface $session, MailerInterface $mailer): Response
     {
         $user = $this->getUser();
         if (!$user) {
@@ -93,12 +93,15 @@ class AccountController extends AbstractController
 
         // Supprimer le fichier du serveur
         $fileSystem = new Filesystem();
+        $files = $fileRepository->getFilesByClient($user->getId());
         $targetDirectory = $this->getParameter('upload_directory');
 
-        try {
-            $fileSystem->remove($targetDirectory . '/' . $fileEntity->getFile());
-        } catch (IOExceptionInterface $exception) {
-            echo "Erreur lors de la suppression du fichier dans " . $exception->getPath();
+        foreach ($files as $fileEntity) {
+            try {
+                $fileSystem->remove($targetDirectory . '/' . $fileEntity->getFile());
+            } catch (IOExceptionInterface $exception) {
+                echo "Erreur lors de la suppression du fichier dans " . $exception->getPath();
+            }
         }
 
         // Supprimer les fichiers et les factures associés à cet utilisateur

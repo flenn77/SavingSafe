@@ -48,6 +48,15 @@ class UsersRepository extends ServiceEntityRepository implements PasswordUpgrade
             ->getResult();
     }
 
+    public function findClients()
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.roles NOT LIKE :role')
+            ->setParameter('role', '%"ROLE_ADMIN"%')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Users[] Returns an array of Users objects
 //     */

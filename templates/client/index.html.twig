@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ClientController!{% endblock %}
+
+{% block body %}
+    <h1 class="text-center mb-4">Liste des Clients</h1>
+
+    <div class="container">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nom du client</th>
+                    <th scope="col">Espace utilisé</th>
+                    <th scope="col">Espace total disponible</th>
+                    {# <th scope="col">Supprimer</th> #}
+                </tr>
+            </thead>
+            <tbody>
+                {% for client in allClients %}
+                <tr>
+                    <th scope="row">{{ loop.index }}</th>
+                    <td>{{ client.first_name }}</td>
+                    <td>{{ client.used_space }} Octets</td>
+                    <td>{{ client.total_space }} Octets</td>
+                    {# <td>
+                        <form action="{{ path('file_delete', {'id': file.id}) }}" method="post" onsubmit="return confirmDelete();">
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
+                        <script>
+                            function confirmDelete() {
+                                return confirm("Êtes-vous sûr de vouloir supprimer ce fichier ?");
+                            }
+                        </script>
+                    </td> #}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

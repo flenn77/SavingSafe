@@ -51,6 +51,15 @@ class FileRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function getFilesByClient($clientId)
+    {
+        return $this->createQueryBuilder('f')
+            ->where('f.user = :clientId')
+            ->setParameter('clientId', $clientId)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return File[] Returns an array of File objects
 //     */
