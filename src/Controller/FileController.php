@@ -23,27 +23,34 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class FileController extends AbstractController
 {
+    //const BYTES_IN_ONE_GIGABYTE = 1.0e9; // 1 Go = 1 x 10^9 octets
+    const BYTES_IN_ONE_GIGABYTE = 1000000000;
     #[Route('/file', name: 'app_file')]
     public function index(Request $request, EntityManagerInterface $entityManager, FileRepository $fileRepository): Response
     {
         $file = new File();
         $user = $this->getUser();
-        
+    
         $form = $this->createForm(AddFileType::class, $file);
         $form->handleRequest($request);
     
         $allFiles = $fileRepository->findBy(['user' => $this->getUser()]);
     
-        /**
-         * Vérification du formulaire et ajout dans la BDD pour l'ajout de médias
-         */
-    
-         if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $uploadedFile */
             $uploadedFile = $form['file']->getData();
     
             $originalFileName = $uploadedFile->getClientOriginalName();
-            $fileMimeType = $uploadedFile->getMimeType();
+            $fileSizeInBytes = $uploadedFile->getSize();
+    
+            // Vérification de l'espace total
+            if (($user->getUsedSpace() + $fileSizeInBytes) > ($user->getTotalSpace() * self::BYTES_IN_ONE_GIGABYTE)) {
+                $this->addFlash('error', 'Vous avez dépassé votre limite de stockage.');
+                return $this->redirectToRoute('app_file');
+            }
+    
+            $user->setUsedSpace($user->getUsedSpace() + $fileSizeInBytes);
+            $entityManager->persist($user);
     
             $targetDirectory = $this->getParameter('upload_directory');
             $fileName = md5(uniqid()).'.'.$uploadedFile->guessExtension();
@@ -51,11 +58,8 @@ class FileController extends AbstractController
     
             $movedFile = new SplFileInfo($this->getParameter('upload_directory').'/'.$fileName);
     
-            // Informations sur le fichier
-            $fileSize = $movedFile->getSize();
-    
             $file->setName($originalFileName);
-            $file->setSize($fileSize);
+            $file->setSize($movedFile->getSize());
             $file->setOwner($user->getEmail());
             $file->setDate(new DateTime());
             $file->setLastAction(new DateTime());
@@ -79,11 +83,43 @@ class FileController extends AbstractController
         ]);
     }
     
+    #[Route('/file/delete/{id}', name: 'file_delete', methods: ['POST'])]
+    public function delete(int $id, FileRepository $fileRepository, EntityManagerInterface $entityManager): Response
+    {
+        $file = $fileRepository->find($id);
+        $user = $this->getUser();
+    
+        if (!$file || $file->getUser() !== $user) {
+            throw $this->createNotFoundException('Fichier introuvable ou vous n’avez pas le droit d’accéder à ce fichier.');
+        }
+    
+        $fileSizeToRemove = $file->getSize();
+    
+        $updatedUsedSpace = max($user->getUsedSpace() - $fileSizeToRemove, 0);
+        $user->setUsedSpace($updatedUsedSpace);
+        $entityManager->persist($user);
+    
+        $fileSystem = new Filesystem();
+        $targetDirectory = $this->getParameter('upload_directory');
+        try {
+            $fileSystem->remove($targetDirectory . '/' . $file->getFile());
+        } catch (IOExceptionInterface $exception) {
+            echo "Erreur lors de la suppression du fichier dans " . $exception->getPath();
+        }
+    
+        $entityManager->remove($file);
+        $entityManager->flush();
+    
+        $this->addFlash('success', 'Fichier supprimé avec succès.');
+        return $this->redirectToRoute('app_file');
+    }
+    
 
 
 
 
-   
+
+
 
 
 #[Route('/file/download/{id}', name: 'file_download')]
@@ -98,42 +134,6 @@ public function download(int $id, FileRepository $fileRepository): Response
     
     return $this->file($filePath, $fileEntity->getName());
 }
-
-
-#[Route('/file/delete/{id}', name: 'file_delete', methods: ['POST'])]
-public function delete(int $id, FileRepository $fileRepository, EntityManagerInterface $entityManager, File $fileEntity): Response
-{
-    $file = $fileRepository->find($id);
-
-    // Si le fichier n'existe pas ou ne appartient pas à l'utilisateur courant
-    if (!$file || $file->getUser() !== $this->getUser()) {
-        throw $this->createNotFoundException('Fichier introuvable ou vous n’avez pas le droit d’accéder à ce fichier.');
-    }
-
-    // Supprimer le fichier du serveur
-    $fileSystem = new Filesystem();
-    $targetDirectory = $this->getParameter('upload_directory');
-
-    try {
-        $fileSystem->remove($targetDirectory . '/' . $fileEntity->getFile());
-    } catch (IOExceptionInterface $exception) {
-        echo "Erreur lors de la suppression du fichier dans " . $exception->getPath();
-    }
-
-    // Supprimer le fichier de la base de données
-    $entityManager->remove($file);
-    $entityManager->flush();
-
-    // Rediriger l'utilisateur vers la liste de ses fichiers avec un message de succès
-    $this->addFlash('success', 'Fichier supprimé avec succès.');
-    return $this->redirectToRoute('app_file');
-}
-
-
-
-
-
-
 
 
 
