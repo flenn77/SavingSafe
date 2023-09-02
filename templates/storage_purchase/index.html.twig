@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Achat d'Espace de Stockage{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {# Ajoutez le lien vers le CDN de Bootstrap si ce n'est pas déjà fait dans base.html.twig #}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header text-center bg-primary text-white">
+                        <h2>Acheter 20Go d'Espace de Stockage</h2>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            Besoin de plus d'espace pour vos fichiers importants? Avec cette option, vous pouvez acheter 20Go d'espace supplémentaire et sécuriser d'avantage vos données.
+                        </p>
+                        <p>
+                            Procédez au paiement sécurisé. Cliquez sur le bouton ci-dessous pour confirmer votre achat.
+                        </p>
+                        <form action="{{ path('app_purchase_storage_charge') }}" method="post">
+                            <script
+                                src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                                data-key="{{ stripe_key }}"
+                                data-amount="2000"
+                                data-name="Saving Safe"
+                                data-description="Achat 20Go Espace de Stockage"
+                                data-locale="fr"
+                                data-currency="eur">
+                            </script>
+                        </form>
+                    </div>
+                    <div class="card-footer text-muted text-center">
+                        Vos transactions sont sécurisées grâce à notre partenariat avec Stripe.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

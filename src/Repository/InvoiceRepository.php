@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Users;
 use App\Entity\Invoice;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Invoice>
@@ -20,6 +21,17 @@ class InvoiceRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Invoice::class);
     }
+    
+    public function deleteInvoicesForUser(Users $user)
+    {
+        $this->createQueryBuilder('i')
+            ->delete()
+            ->where('i.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->execute();
+    }
+    
 
 //    /**
 //     * @return Invoice[] Returns an array of Invoice objects
