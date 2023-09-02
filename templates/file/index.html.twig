@@ -5,8 +5,6 @@
 {% block body %}
 <div class="container mt-5">
 
-
-
 {% for message in app.flashes('success') %}
     <div class="alert alert-success">
         {{ message }}
@@ -19,11 +17,11 @@
     </div>
 {% endfor %}
 
-    {% for message in app.flashes('dropzone_success') %}
-        <div class="alert alert-success" role="alert" data-turbo-cache="false">
-            {{ message }}
-        </div>
-    {% endfor %}
+{% for message in app.flashes('dropzone_success') %}
+    <div class="alert alert-success" role="alert" data-turbo-cache="false">
+        {{ message }}
+    </div>
+{% endfor %}
 
     <div class="card">
         <div class="card-header">
@@ -43,53 +41,64 @@
     </div>
 </div>
 
+<div class="container mt-5">
+    <h3>Vos fichiers :</h3>
+    
+    {# Calculer la taille totale des fichiers #}
+    {% set totalSize = 0 %}
+    {% for file in files %}
+        {% set totalSize = totalSize + file.size %}
+    {% endfor %}
+
+    {# Afficher la taille totale #}
+    <p><strong>Taille totale des fichiers:</strong> {{ totalSize }} Octets</p>
+
+{# Utilisez la constante pour une meilleure lisibilité #}
+{% set GB_IN_BYTES = 1000000000 %}
+
+<p><strong>Espace utilisé:</strong> {{ app.user.usedSpace|number_format(0, ',', '') }} Octets</p>
+<p><strong>Espace total disponible:</strong> {{ (app.user.totalSpace * GB_IN_BYTES)|number_format(0, ',', '') }} Octets</p>
+<p><strong>Espace restant:</strong> {{ ((app.user.totalSpace * GB_IN_BYTES) - app.user.usedSpace)|number_format(0, ',', '') }} Octets</p>
 
 
-    <div class="container mt-5">
-        <h3>Vos fichiers :</h3>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nom</th>
-                    <th scope="col">Taille</th>
-                    <th scope="col">Date d'ajout</th>
-                    <th scope="col">Visualiser</th>
-                    <th scope="col">Télécharger</th>
-                    <th scope="col">Supprimer</th> {# Nouvelle colonne #}
-                </tr>
-            </thead>
-            <tbody>
-                {% for file in files %}
-                <tr>
-                    <th scope="row">{{ loop.index }}</th>
-                    <td>{{ file.name }}</td>
-                    <td>{{ file.size }} Bytes</td>
-                    <td>{{ file.date|date('d/m/Y H:i') }}</td>
-                    <td>
-                        <a href="{{ path('app_file_view', {'id': file.id}) }}" class="btn btn-info">Visualiser</a>
-                    </td>
-                    <td>
-                        <a href="{{ path('file_download', {'id': file.id}) }}" class="btn btn-primary">Télécharger</a>
-                    </td>
-                    <td>
-                        <form action="{{ path('file_delete', {'id': file.id}) }}" method="post" onsubmit="return confirmDelete();">
-    <button type="submit" class="btn btn-danger">Supprimer</button>
-</form>
-<script>
-    function confirmDelete() {
-        return confirm("Êtes-vous sûr de vouloir supprimer ce fichier ?");
-    }
-</script>
-
-                        {# Assurez-vous que la route 'file_delete' existe dans votre contrôleur #}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-
-
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Taille</th>
+                <th scope="col">Date d'ajout</th>
+                <th scope="col">Visualiser</th>
+                <th scope="col">Télécharger</th>
+                <th scope="col">Supprimer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in files %}
+            <tr>
+                <th scope="row">{{ loop.index }}</th>
+                <td>{{ file.name }}</td>
+                <td>{{ file.size }} Octets</td>
+                <td>{{ file.date|date('d/m/Y H:i') }}</td>
+                <td>
+                    <a href="{{ path('app_file_view', {'id': file.id}) }}" class="btn btn-info">Visualiser</a>
+                </td>
+                <td>
+                    <a href="{{ path('file_download', {'id': file.id}) }}" class="btn btn-primary">Télécharger</a>
+                </td>
+                <td>
+                    <form action="{{ path('file_delete', {'id': file.id}) }}" method="post" onsubmit="return confirmDelete();">
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                    <script>
+                        function confirmDelete() {
+                            return confirm("Êtes-vous sûr de vouloir supprimer ce fichier ?");
+                        }
+                    </script>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
