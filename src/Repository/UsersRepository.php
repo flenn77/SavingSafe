@@ -57,6 +57,12 @@ class UsersRepository extends ServiceEntityRepository implements PasswordUpgrade
             ->getResult();
     }
 
+    public function countFilesPerUser()
+    {
+        // Implémentez ici la logique pour compter les fichiers par utilisateur
+    }
+
+
 //    /**
 //     * @return Users[] Returns an array of Users objects
 //     */

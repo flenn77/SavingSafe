@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center mb-5">Statistiques</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Nombre total de fichiers</h5>
+                    <p class="card-text h2">{{ totalFiles }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Fichiers téléchargés aujourd'hui</h5>
+                    <p class="card-text h2">{{ filesUploadedToday }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Fichiers par utilisateurs</h5><br \>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Prénom</th>
+                                <th scope="col">Nom</th>
+                                <th scope="col">Nombre de fichiers</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in filesByUser %}
+                            <tr>
+                                <td>{{ user.first_name }}</td>
+                                <td>{{ user.last_name }}</td>
+                                <td>{{ user.fileCount }} fichiers</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
