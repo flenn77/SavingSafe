@@ -54,11 +54,11 @@
     <p><strong>Taille totale des fichiers:</strong> {{ totalSize }} Octets</p>
 
 {# Utilisez la constante pour une meilleure lisibilité #}
-{% set GB_IN_BYTES = 1000000000 %}
+{% set GB_IN_BYTES = 1024 * 1024 * 1024 %}
 
-<p><strong>Espace utilisé:</strong> {{ app.user.usedSpace|number_format(0, ',', '') }} Octets</p>
+<p><strong>Espace utilisé:</strong> {{ (app.user.usedSpace * GB_IN_BYTES)|number_format(0, ',', '') }} Octets</p>
 <p><strong>Espace total disponible:</strong> {{ (app.user.totalSpace * GB_IN_BYTES)|number_format(0, ',', '') }} Octets</p>
-<p><strong>Espace restant:</strong> {{ ((app.user.totalSpace * GB_IN_BYTES) - app.user.usedSpace)|number_format(0, ',', '') }} Octets</p>
+<p><strong>Espace restant:</strong> {{ ((app.user.totalSpace * GB_IN_BYTES) - (app.user.usedSpace * GB_IN_BYTES))|number_format(0, ',', '') }} Octets</p>
 
 
     <table class="table table-striped">

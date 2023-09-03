@@ -26,6 +26,7 @@
                     <td>{{ client.totalspace }} Go</td>
                     <td>
                         {% set percentage = ((client.usedspace / (1024 * 1024 * 1024)) / client.totalspace) * 100 %}
+                        {# {{ dump(percentage) }} #}
                         <div class="progress">
                             <div class="progress-bar" role="progressbar" style="width: {{ percentage }}%;" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>

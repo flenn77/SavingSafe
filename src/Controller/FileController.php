@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class FileController extends AbstractController
 {
     //const BYTES_IN_ONE_GIGABYTE = 1.0e9; // 1 Go = 1 x 10^9 octets
-    const BYTES_IN_ONE_GIGABYTE = 1000000000;
+    const BYTES_IN_ONE_GIGABYTE = 1024 * 1024 * 1024;
     #[Route('/file', name: 'app_file')]
     public function index(Request $request, EntityManagerInterface $entityManager, FileRepository $fileRepository): Response
     {
@@ -42,14 +42,17 @@ class FileController extends AbstractController
     
             $originalFileName = $uploadedFile->getClientOriginalName();
             $fileSizeInBytes = $uploadedFile->getSize();
+            $fileSizeInGigabytes = $fileSizeInBytes / self::BYTES_IN_ONE_GIGABYTE;
     
             // Vérification de l'espace total
-            if (($user->getUsedSpace() + $fileSizeInBytes) > ($user->getTotalSpace() * self::BYTES_IN_ONE_GIGABYTE)) {
+            if (($user->getUsedSpace() + $fileSizeInGigabytes) > $user->getTotalSpace()) {
                 $this->addFlash('error', 'Vous avez dépassé votre limite de stockage.');
                 return $this->redirectToRoute('app_file');
             }
+
+            // dd($user->getUsedSpace() + $fileSizeInGigabytes);
     
-            $user->setUsedSpace($user->getUsedSpace() + $fileSizeInBytes);
+            $user->setUsedSpace($user->getUsedSpace() + $fileSizeInGigabytes);
             $entityManager->persist($user);
     
             $targetDirectory = $this->getParameter('upload_directory');

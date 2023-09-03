@@ -50,10 +50,10 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $postal_code = null;
 
     #[ORM\Column]
-    private ?int $used_space = 0;
+    private ?float $used_space = 0;
 
     #[ORM\Column]
-    private ?int $total_space = 0;
+    private ?float $total_space = 0;
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
@@ -216,24 +216,24 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getUsedSpace(): ?int
+    public function getUsedSpace(): ?float
     {
         return $this->used_space;
     }
 
-    public function setUsedSpace(int $used_space): static
+    public function setUsedSpace(float $used_space): static
     {
         $this->used_space = $used_space;
 
         return $this;
     }
 
-    public function getTotalSpace(): ?int
+    public function getTotalSpace(): ?float
     {
         return $this->total_space;
     }
 
-    public function setTotalSpace(int $total_space): static
+    public function setTotalSpace(float $total_space): static
     {
         $this->total_space = $total_space;
 
