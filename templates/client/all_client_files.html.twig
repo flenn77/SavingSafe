@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fichiers des clients{% endblock %}
+
+{% block body %}
+    <div class="container my-4">
+        <h1 class="mb-4">Tous les fichiers des clients</h1>
+
+        {% if files|length > 0 %}
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Propriétaire</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in files %}
+                        <tr>
+                            <td>{{ file.getName() }}</td>
+                            <td>{{ file.getUser().getFullName() }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-warning" role="alert">
+                Aucun fichier de client n'est actuellement stocké.
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

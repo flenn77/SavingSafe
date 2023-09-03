@@ -24,6 +24,17 @@ class AddFileType extends AbstractType
                     new ConFile([
                         'maxSize' => '250M',
                         'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                            'application/msword', // DOC
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // DOCX
+                            'application/vnd.ms-excel', // XLS
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // XLSX
+                            'application/vnd.ms-powerpoint', // PPT
+                            'application/vnd.openxmlformats-officedocument.presentationml.presentation', // PPTX
+                            'text/plain', // TXT
+
+                            // Images
                             'image/png',
                             'image/jpeg',
                             'image/jpg',
@@ -31,34 +42,26 @@ class AddFileType extends AbstractType
                             'image/bmp',
                             'image/webp',
                             'image/svg+xml',
-                            'audio/mpeg',
+                            'image/tiff',
+                            'image/bmp',
+
+                            // Audio
+                            'audio/mpeg', // MP3
                             'audio/wav',
-                            'audio/ogg',
+
+                            // Video
                             'video/mp4',
-                            'video/x-msvideo',
-                            'video/quicktime',
-                            'video/x-flv',
-                            'video/ogg',
-                            'video/webm',
-                            'application/pdf',
-                            'application/x-pdf',
-                            'application/msword',
-                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                            'application/vnd.ms-excel',
-                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                            'application/vnd.ms-powerpoint',
-                            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                            'video/x-msvideo', // AVI
+                            'video/quicktime', // MOV
+
+                            // Archives
                             'application/zip',
                             'application/x-rar-compressed',
                             'application/x-tar',
                             'application/x-7z-compressed',
-                            'text/plain',
-                            'text/html',
-                            'text/css',
-                            'text/javascript',
+
+                            // Others
                             'application/octet-stream',
-                            'application/json',
-                            'application/xml',
                         ],
                         'mimeTypesMessage' => 'Please upload a valid PDF document',
                     ])

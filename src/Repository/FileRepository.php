@@ -60,6 +60,18 @@ class FileRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findAllClientFiles()
+    {
+        $qb = $this->createQueryBuilder('f');
+        $qb->leftJoin('f.user', 'u');
+
+        return $qb->where($qb->expr()->notLike('u.roles', ':role'))
+                  ->setParameter('role', '%ROLE_ADMIN%')
+                  ->getQuery()
+                  ->getResult();
+
+    }
+
 //    /**
 //     * @return File[] Returns an array of File objects
 //     */
