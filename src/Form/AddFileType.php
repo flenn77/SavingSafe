@@ -22,15 +22,44 @@ class AddFileType extends AbstractType
                 ],
                 'constraints' => [
                     new ConFile([
-                        'maxSize' => '250M',
+                        'maxSize' => '2500M',
                         'mimeTypes' => [
                             'application/pdf',
                             'application/x-pdf',
+                            'application/msword', // DOC
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // DOCX
+                            'application/vnd.ms-excel', // XLS
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // XLSX
+                            'application/vnd.ms-powerpoint', // PPT
+                            'application/vnd.openxmlformats-officedocument.presentationml.presentation', // PPTX
+                            'text/plain', // TXT
+
+                            // Images
                             'image/png',
                             'image/jpeg',
                             'image/jpg',
                             'image/gif',
                             'image/svg+xml',
+                            'image/tiff',
+                            'image/bmp',
+
+                            // Audio
+                            'audio/mpeg', // MP3
+                            'audio/wav',
+
+                            // Video
+                            'video/mp4',
+                            'video/x-msvideo', // AVI
+                            'video/quicktime', // MOV
+
+                            // Archives
+                            'application/zip',
+                            'application/x-rar-compressed',
+                            'application/x-tar',
+                            'application/x-7z-compressed',
+
+                            // Others
+                            'application/octet-stream',
                         ],
                         'mimeTypesMessage' => 'Please upload a valid PDF document',
                     ])
