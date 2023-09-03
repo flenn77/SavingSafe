@@ -69,7 +69,34 @@ class FileRepository extends ServiceEntityRepository
                   ->setParameter('role', '%ROLE_ADMIN%')
                   ->getQuery()
                   ->getResult();
+    }
 
+    public function getTotalFiles()
+    {
+        return $this->createQueryBuilder('f')
+            ->select('count(f.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getFilesUploadedToday()
+    {
+        return $this->createQueryBuilder('f')
+            ->select('count(f.id)')
+            ->where('f.date > :today')
+            ->setParameter('today', new \DateTime('today'))
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getFilesCountByUsers()
+    {
+        $queryBuilder = $this->createQueryBuilder('f')
+            ->select('u.first_name, u.last_name, COUNT(f.id) as fileCount')
+            ->join('f.user', 'u')  // ici, u représente l'entité Users
+            ->groupBy('u.id, u.first_name, u.last_name');
+
+        return $queryBuilder->getQuery()->getResult();
     }
 
 //    /**
