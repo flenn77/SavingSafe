@@ -9,9 +9,6 @@
                 <li class="nav-item {% if app.request.attributes.get('_route') == 'app_account' %}active{% endif %}">
                     <a class="nav-link" aria-current="page" href="{{ path("app_account") }}">Profil</a>
                 </li>
-                <li class="nav-item {% if app.request.attributes.get('_route') == 'app_stripe' %}active{% endif %}">
-                    <a class="nav-link" aria-current="page" href="{{ path("app_stripe") }}">Espace de stockage</a>
-                </li>
                 {% if app.user is defined and app.user.roles is defined and 'ROLE_ADMIN' in app.user.roles %}
                     <li class="nav-item {% if app.request.attributes.get('_route') == 'app_client' %}active{% endif %}">
                         <a class="nav-link" aria-current="page" href="{{ path('app_client') }}">Liste des clients</a>
@@ -19,21 +16,21 @@
                     <li class="nav-item {% if app.request.attributes.get('_route') == 'app_stats' %}active{% endif %}">
                         <a class="nav-link" aria-current="page" href="{{ path('app_stats') }}">Statistiques</a>
                     </li>
-                {% endif %}
-                {% if app.user is defined and app.user.roles is defined and 'ROLE_ADMIN' in app.user.roles %}
                     <li class="nav-item {% if app.request.attributes.get('_route') == 'app_all_client_files' %}active{% endif %}">
                         <a class="nav-link" aria-current="page" href="{{ path('app_all_client_files') }}">Fichiers des clients</a>
                     </li>
                 {% endif %}
-                <li class="nav-item {% if app.request.attributes.get('_route') == 'user_invoices' %}active{% endif %}">
-                    <a class="nav-link" aria-current="page" href="{{ path('user_invoices') }}">Mes factures</a>
-                </li>
-                <li class="nav-item {% if app.request.attributes.get('_route') == 'app_file' %}active{% endif %}">
-                    <a class="nav-link" aria-current="page" href="{{ path('app_file') }}">Fichiers</a>
-                </li>
-                <li class="nav-item {% if app.request.attributes.get('_route') == 'app_purchase_storage' %}active{% endif %}">
-                    <a class="nav-link" aria-current="page" href="{{ path('app_purchase_storage') }}">Achat de 20GO</a>
-                </li>
+                {% if app.user is defined and app.user.roles is defined and 'ROLE_ADMIN' not in app.user.roles %}
+                    <li class="nav-item {% if app.request.attributes.get('_route') == 'user_invoices' %}active{% endif %}">
+                        <a class="nav-link" aria-current="page" href="{{ path('user_invoices') }}">Mes factures</a>
+                    </li>
+                    <li class="nav-item {% if app.request.attributes.get('_route') == 'app_file' %}active{% endif %}">
+                        <a class="nav-link" aria-current="page" href="{{ path('app_file') }}">Fichiers</a>
+                    </li>
+                    <li class="nav-item {% if app.request.attributes.get('_route') == 'app_purchase_storage' %}active{% endif %}">
+                        <a class="nav-link" aria-current="page" href="{{ path('app_purchase_storage') }}">Achat de 20GO</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
 
