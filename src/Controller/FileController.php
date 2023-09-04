@@ -85,6 +85,10 @@ class FileController extends AbstractController
             'files' => $allFiles,
         ]);
     }
+
+
+
+    
     
     #[Route('/file/delete/{id}', name: 'file_delete', methods: ['POST'])]
     public function delete(int $id, FileRepository $fileRepository, EntityManagerInterface $entityManager): Response
