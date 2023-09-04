@@ -53,14 +53,13 @@
 <h1>SavingSafe</h1>
 <p class="section-title">Chez Nous ! Vos Documents Seront Safe </p><bR>
 
-
 <div class="company-info">
     <p>SavingSafe</p>
     <p>10 Rue de Paris, 75001 Paris</p>
     <p>Téléphone 01 32 73 52 53</p>
     <p>Contact@savingsafe.fr</p>
+    <p>Numéro SIRET : 123 456 789 01234</p> <!-- Ligne ajoutée ici -->
 </div>
-
 <!-- Informations de la facture -->
 <h3>FACTURE Nº {{ invoice.invoiceNumber }}</h3>
 <p>DATE {{ invoice.invoiceDate|date('d/m/Y') }}</p>
@@ -75,19 +74,21 @@
 <bR>
 
 <!-- Items de la facture (exemple) -->
-
 <h3>Description</h3>
 <table style="width: 100%; border-top: 2px solid black; border-bottom: 2px solid black;">
     <tr>
         <td style="text-align: left;">Produit(s) / Service(s)</td>
         <td style="text-align: left;">Espace de stockage 20GO</td>
-        <td style="text-align: right;">{{ invoice.amount }} €</td>
+        <td style="text-align: right;">16 €</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">TVA (20%)</td> <!-- Ligne ajoutée ici -->
+        <td style="text-align: left;">&nbsp;</td> <!-- Cette cellule est laissée vide pour le formatage -->
+        <td style="text-align: right;">4 €</td> <!-- Ligne ajoutée ici -->
     </tr>
 </table>
 
-<p style="text-align: right; font-weight: bold; font-size: 22px;">Montant Total : {{ invoice.amount }} €</p>
-
-
+<p style="text-align: right; font-weight: bold; font-size: 22px;">Montant Total (TTC) : {{ invoice.amount }} €</p> <!-- Ajout du montant de la TVA au montant total -->
 
 <bR>
 <bR>
