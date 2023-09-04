@@ -3,6 +3,14 @@
 {% block title %}Statistiques{% endblock %}
 
 {% block body %}
+
+<style>
+    .chart-container {
+        width: 400px;  /* Largeur fixe */
+        height: 300px; /* Hauteur fixe */
+    }
+</style>s
+
 <div class="container mt-5">
     <h1 class="text-center mb-5">Statistiques</h1>
 
@@ -53,5 +61,60 @@
         </div>
     </div>
 
-</div>
+    {{ dump(fileFormatsNbrKeys) }}
+    {{ dump(fileFormatsNbrValues) }}
+
+    <div class="row mt-5">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Répartition des formats de fichiers</h5>
+                        <div class="d-flex justify-content-center align-items-center" style="height: 50vh;">
+                            <div class="chart-container">
+                                <canvas id="fileFormatPieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('fileFormatPieChart').getContext('2d');
+
+        const data = {
+            labels: {{ fileFormatsNbrKeys|json_encode|raw }},
+            datasets: [{
+                data: {{ fileFormatsNbrValues|json_encode|raw }},
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',    // Rouge
+                    'rgba(54, 162, 235, 0.2)',    // Bleu
+                    'rgba(255, 206, 86, 0.2)',    // Jaune
+                    'rgba(75, 192, 192, 0.2)',    // Cyan
+                    'rgba(153, 102, 255, 0.2)',   // Violet
+                    'rgba(255, 159, 64, 0.2)',    // Orange
+                    // ... Ajoutez plus de couleurs si nécessaire
+                ],
+                // ... autres options du dataset
+            }],
+            // ... autres options de données
+        };
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    });
+    </script>
 {% endblock %}

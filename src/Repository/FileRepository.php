@@ -31,6 +31,14 @@ class FileRepository extends ServiceEntityRepository
         return $this->findAll();
     }
 
+    public function getAllFileNames(): array
+    {
+        return $this->createQueryBuilder('f')
+            ->select('f.name')
+            ->getQuery()
+            ->getResult();
+    }    
+    
     public function deleteFilesForUser(Users $user)
     {
         $this->createQueryBuilder('f')
@@ -98,6 +106,8 @@ class FileRepository extends ServiceEntityRepository
 
         return $queryBuilder->getQuery()->getResult();
     }
+
+
 
 //    /**
 //     * @return File[] Returns an array of File objects

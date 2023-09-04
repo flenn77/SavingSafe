@@ -41,9 +41,17 @@
     </div>
 </div>
 
+
 <div class="container mt-5">
+
+
     <h3>Vos fichiers :</h3>
-    
+
+
+
+
+
+
     {# Calculer la taille totale des fichiers #}
     {% set totalSize = 0 %}
     {% for file in files %}
@@ -61,44 +69,111 @@
 <p><strong>Espace restant:</strong> {{ ((app.user.totalSpace * GB_IN_BYTES) - (app.user.usedSpace * GB_IN_BYTES))|number_format(0, ',', '') }} Octets</p>
 
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Nom</th>
-                <th scope="col" class="sortable" id="sizeFileColumn">Taille</th>
-                <th scope="col" class="sortable" id="dateAdded">Date d'ajout</th>
-                <th scope="col">Visualiser</th>
-                <th scope="col">Télécharger</th>
-                <th scope="col">Supprimer</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for file in files %}
-            <tr>
-                <th scope="row">{{ loop.index }}</th>
-                <td>{{ file.name }}</td>
-                <td>{{ file.size }} Octets</td>
-                <td>{{ file.date|date('d/m/Y H:i') }}</td>
-                <td>
-                    <a href="{{ path('app_file_view', {'id': file.id}) }}" class="btn btn-info">Visualiser</a>
-                </td>
-                <td>
-                    <a href="{{ path('file_download', {'id': file.id}) }}" class="btn btn-primary">Télécharger</a>
-                </td>
-                <td>
-                    <form action="{{ path('file_delete', {'id': file.id}) }}" method="post" onsubmit="return confirmDelete();">
-                        <button type="submit" class="btn btn-danger">Supprimer</button>
-                    </form>
-                    <script>
-                        function confirmDelete() {
-                            return confirm("Êtes-vous sûr de vouloir supprimer ce fichier ?");
-                        }
-                    </script>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+   <table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">
+                <div class="row text-center">
+                    <div class="col-md-9 offset-md-0">
+                        <input type="text" class="form-control" id="fileSearchInput" placeholder="Tapez pour rechercher...">
+                    </div>
+                </div>
+            </th>
+            <th scope="col">
+               
+
+                <div class="row text-center">
+                    <div class="col-md-11 offset-md-0">
+                        <select class="form-control" id="fileTypeFilter">
+                        <!-- Les options seront ajoutées dynamiquement par JavaScript -->
+                        <option value="all">Les types  &darr;</option>
+                    </select>                    
+                    </div>
+                </div>
+
+
+            </th>
+            <th scope="col"class="text-center sortable"  id="sizeFileColumn">Taille (Octets) &darr;</th>
+            <th scope="col" class="text-center sortable" id="dateAdded">Date d'ajout &darr;</th>
+            <th scope="col" class="text-center">Visualiser</th>
+            <th scope="col" class="text-center">Télécharger</th>
+            <th scope="col" class="text-center">Supprimer</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for file in files %}
+        <tr>
+            <th scope="row">{{ loop.index }}</th>
+            <td>{{ file.name }}</td>
+            <td class="text-center">
+                {% set fileExtension = file.name|split('.')|last %}
+                {{ fileExtension }}
+            </td>
+            <td>{{ file.size }}</td>
+            <td>{{ file.date|date('d/m/Y H:i') }}</td>
+            <td class="text-center">
+                <a href="{{ path('app_file_view', {'id': file.id}) }}" class="btn btn-info">Visualiser</a>
+            </td >
+            <td class="text-center">
+                <a href="{{ path('file_download', {'id': file.id}) }}" class="btn btn-primary">Télécharger</a>
+            </td>
+            <td class="text-center">
+                <form action="{{ path('file_delete', {'id': file.id}) }}" method="post" onsubmit="return confirmDelete();">
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+                <script>
+                    function confirmDelete() {
+                        return confirm("Êtes-vous sûr de vouloir supprimer ce fichier ?");
+                    }
+                </script>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 </div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const fileTypeFilter = document.getElementById('fileTypeFilter');
+        const tableRows = document.querySelectorAll('table tbody tr');
+        const fileTypes = new Set();
+
+        tableRows.forEach(row => {
+            const fileName = row.querySelector('td:nth-child(2)').textContent;
+            const fileExtension = fileName.slice(((fileName.lastIndexOf(".") - 1) >>> 0) + 2);
+
+            fileTypes.add(fileExtension);
+        });
+
+        fileTypes.forEach(type => {
+            const option = document.createElement('option');
+            option.value = type;
+            option.textContent = type;
+            fileTypeFilter.appendChild(option);
+        });
+
+        document.getElementById('fileSearchInput').addEventListener('input', filterFiles);
+        fileTypeFilter.addEventListener('change', filterFiles);
+
+        function filterFiles() {
+            const searchTerm = document.getElementById('fileSearchInput').value.toLowerCase();
+            const selectedType = fileTypeFilter.value;
+
+            tableRows.forEach(row => {
+                const fileName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                const fileExtension = fileName.slice(((fileName.lastIndexOf(".") - 1) >>> 0) + 2);
+
+                if ((fileName.includes(searchTerm) || searchTerm === "") && (fileExtension === selectedType || selectedType === "all")) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    });
+
+</script>
 {% endblock %}

@@ -72,3 +72,21 @@ document.addEventListener('DOMContentLoaded', (event) => {
     dateColumn.addEventListener("click", () => sortTable('date', 4));
     sizeColumn.addEventListener("click", () => sortTable('size', 3, true));
 });
+
+
+
+document.getElementById('fileSearchInput').addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    const tableRows = document.querySelectorAll('table tbody tr');
+
+    tableRows.forEach(row => {
+        const fileName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+        if (fileName.includes(searchTerm)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+
+

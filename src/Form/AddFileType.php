@@ -24,6 +24,7 @@ class AddFileType extends AbstractType
                     new ConFile([
                         'maxSize' => '25000M',
                         'mimeTypes' => [
+                            // Documents
                             'application/pdf',
                             'application/x-pdf',
                             'application/msword', // DOC
