@@ -22,7 +22,7 @@ class AddFileType extends AbstractType
                 ],
                 'constraints' => [
                     new ConFile([
-                        'maxSize' => '250M',
+                        'maxSize' => '25000M',
                         'mimeTypes' => [
                             'application/pdf',
                             'application/x-pdf',
