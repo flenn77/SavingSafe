@@ -30,8 +30,8 @@
             {% endfor %}
 
             <form action="{{ path('app_login') }}" method="post">
-                <input type="text" name="_username" placeholder="Email" class="form-control" value="{{ last_username }}" />
-                <input type="password" name="_password" placeholder="Password" class="form-control" />
+                <input type="text" name="_username" placeholder="Email" class="form-control" value="{{ last_username }}" style="margin-bottom:7px" />
+                <input type="password" name="_password" placeholder="Password" class="form-control"  style="margin-bottom:20px" />
                 <input type="hidden" name="_target_path" value="/">
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 <button type="submit" class="btn btn-default btn-block btn-custom">Login</button>
