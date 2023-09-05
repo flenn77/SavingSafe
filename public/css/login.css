@@ -17,16 +17,10 @@ body, html {
     color: #505050;        /* Changer la couleur du texte en blanc */
 }
 
-
-
-
-
-
-
 .center-button {
     text-align: center;
 }
-  .btn-register {
+.btn-register {
     background-color: #cccccc;  /* couleur gris */
     border-color: #b3b3b3;  /* couleur gris un peu plus foncé pour la bordure */
     font-size: 1.3rem;  /* Réduit la taille du texte */
