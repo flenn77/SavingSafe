@@ -3,6 +3,14 @@
 {% block title %}Fichiers des clients{% endblock %}
 
 {% block body %}
+
+    <style>
+        .sortable:hover {
+            cursor: pointer;
+            color: #088AF2;
+        }
+    </style>
+
     <div class="container my-4">
         <h1 class="mb-4">Tous les fichiers des clients</h1>
 
@@ -22,14 +30,14 @@
                                 <div class="col-md-11 offset-md-0">
                                     <select class="form-control" id="fileTypeFilter">
                                     <!-- Les options seront ajoutées dynamiquement par JavaScript -->
-                                    <option value="all">Les types  &darr;</option>
+                                    <option value="all">Les types &darr;</option>
                                 </select>                    
                                 </div>
                             </div>
                         </th>
-                        <th scope="col"class="text-center sortable"  id="sizeFileColumn">Taille (Octets) &darr;</th>
+                        <th scope="col" class="text-center sortable"  id="sizeFileColumn">Taille (Octets) &darr;</th>
                         <th scope="col" class="text-center sortable" id="dateAdded">Date d'ajout &darr;</th>
-                        <th>Propriétaire</th>
+                        <th scope="col" class="text-center sortable" id="ownerColumn">Propriétaire &darr;</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,7 +45,7 @@
                         <tr>
                             <td>{{ file.name }}</td>
                             <td class="text-center">
-                                {% set fileExtension = file.name|split('.')|last %}
+                                {% set fileExtension = file.name|split('.')|last|lower %}
                                 {{ fileExtension }}
                             </td>
                             <td>{{ file.size }}</td>
@@ -63,9 +71,9 @@
 
             tableRows.forEach(row => {
                 const fileName = row.querySelector('td:nth-child(1)').textContent;
-                const fileExtension = fileName.slice(((fileName.lastIndexOf(".") - 1) >>> 0) + 2);
+                const fileExtension = fileName.slice(((fileName.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase();
 
-                fileTypes.add(fileExtension);
+                fileTypes.add(fileExtension.toLowerCase());
             });
 
             fileTypes.forEach(type => {
@@ -95,5 +103,41 @@
             }
         });
 
+        document.addEventListener("DOMContentLoaded", function() {
+            const headers = document.querySelectorAll('.sortable');
+
+            headers.forEach(header => {
+                header.setAttribute('data-sort', 'asc');
+                header.addEventListener('click', function() {
+                    sortTable(header);
+                });
+            });
+        });
+
+        function sortTable(header) {
+            const table = header.closest('table');
+            const tbody = table.querySelector('tbody');
+            const columnIndex = Array.from(header.parentNode.children).indexOf(header);
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            const currentSort = header.getAttribute('data-sort');
+
+            rows.sort((a, b) => {
+                const cellA = a.children[columnIndex].textContent.trim().toLowerCase();
+                const cellB = b.children[columnIndex].textContent.trim().toLowerCase();
+
+                if (!isNaN(cellA) && !isNaN(cellB)) {
+                    return (currentSort === 'asc' ? 1 : -1) * (parseFloat(cellA) - parseFloat(cellB));
+                }
+
+                return (currentSort === 'asc' ? 1 : -1) * cellA.localeCompare(cellB);
+            });
+
+            rows.forEach(row => {
+                tbody.appendChild(row);
+            });
+
+            // Inverse le tri pour le prochain clic
+            header.setAttribute('data-sort', currentSort === 'asc' ? 'desc' : 'asc');
+        }
     </script>
 {% endblock %}
