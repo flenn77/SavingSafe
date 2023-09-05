@@ -10,14 +10,38 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>Nom</th>
+                        <th scope="col">
+                            <div class="row text-center">
+                                <div class="col-md-9 offset-md-0">
+                                    <input type="text" class="form-control" id="fileSearchInput" placeholder="Tapez pour rechercher...">
+                                </div>
+                            </div>
+                        </th>
+                        <th scope="col">
+                            <div class="row text-center">
+                                <div class="col-md-11 offset-md-0">
+                                    <select class="form-control" id="fileTypeFilter">
+                                    <!-- Les options seront ajoutées dynamiquement par JavaScript -->
+                                    <option value="all">Les types  &darr;</option>
+                                </select>                    
+                                </div>
+                            </div>
+                        </th>
+                        <th scope="col"class="text-center sortable"  id="sizeFileColumn">Taille (Octets) &darr;</th>
+                        <th scope="col" class="text-center sortable" id="dateAdded">Date d'ajout &darr;</th>
                         <th>Propriétaire</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for file in files %}
                         <tr>
-                            <td>{{ file.getName() }}</td>
+                            <td>{{ file.name }}</td>
+                            <td class="text-center">
+                                {% set fileExtension = file.name|split('.')|last %}
+                                {{ fileExtension }}
+                            </td>
+                            <td>{{ file.size }}</td>
+                            <td>{{ file.date|date('d/m/Y H:i') }}</td>
                             <td>{{ file.getUser().getFullName() }}</td>
                         </tr>
                     {% endfor %}
@@ -29,4 +53,46 @@
             </div>
         {% endif %}
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const fileTypeFilter = document.getElementById('fileTypeFilter');
+            const tableRows = document.querySelectorAll('table tbody tr');
+            const fileTypes = new Set();
+
+            tableRows.forEach(row => {
+                const fileName = row.querySelector('td:nth-child(1)').textContent;
+                const fileExtension = fileName.slice(((fileName.lastIndexOf(".") - 1) >>> 0) + 2);
+
+                fileTypes.add(fileExtension);
+            });
+
+            fileTypes.forEach(type => {
+                const option = document.createElement('option');
+                option.value = type;
+                option.textContent = type;
+                fileTypeFilter.appendChild(option);
+            });
+
+            document.getElementById('fileSearchInput').addEventListener('input', filterFiles);
+            fileTypeFilter.addEventListener('change', filterFiles);
+
+            function filterFiles() {
+                const searchTerm = document.getElementById('fileSearchInput').value.toLowerCase();
+                const selectedType = fileTypeFilter.value;
+
+                tableRows.forEach(row => {
+                    const fileName = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+                    const fileExtension = fileName.slice(((fileName.lastIndexOf(".") - 1) >>> 0) + 2);
+
+                    if ((fileName.includes(searchTerm) || searchTerm === "") && (fileExtension === selectedType || selectedType === "all")) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+        });
+
+    </script>
 {% endblock %}
