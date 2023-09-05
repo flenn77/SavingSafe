@@ -81,6 +81,8 @@
                 </div>
             </th>
             <th scope="col">
+               
+
                 <div class="row text-center">
                     <div class="col-md-11 offset-md-0">
                         <select class="form-control" id="fileTypeFilter">
@@ -89,6 +91,8 @@
                     </select>                    
                     </div>
                 </div>
+
+
             </th>
             <th scope="col" class="text-center sortable"  id="sizeFileColumn">Taille (Octets) &darr;</th>
             <th scope="col" class="text-center sortable" id="dateAdded">Date d'ajout &darr;</th>
@@ -132,6 +136,8 @@
 
 
 <script>
+    isAdmin = false;
+
     document.addEventListener("DOMContentLoaded", function() {
         const fileTypeFilter = document.getElementById('fileTypeFilter');
         const tableRows = document.querySelectorAll('table tbody tr');

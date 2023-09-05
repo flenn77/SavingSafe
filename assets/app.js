@@ -24,6 +24,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const sizeColumn = document.querySelector("#sizeFileColumn");
     let isSortedAsc = { date: false, size: false };
 
+    let dateColumnIndex = isAdmin ? 4 : 5;
+    let sizeColumnIndex = isAdmin ? 3 : 4;
+
+    console.log(isAdmin)
+
     function sortTable(column, columnIndex, isNumeric = false) {
         const table = document.querySelector("table tbody");
         const rows = Array.from(table.querySelectorAll("tr"));
@@ -47,8 +52,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
         rows.forEach(row => table.appendChild(row));
     }
 
-    dateColumn.addEventListener("click", () => sortTable('date', 4));
-    sizeColumn.addEventListener("click", () => sortTable('size', 3, true));
+    dateColumn.addEventListener("click", () => sortTable('date', dateColumnIndex));
+    sizeColumn.addEventListener("click", () => sortTable('size', sizeColumnIndex, true));
 });
 
 
