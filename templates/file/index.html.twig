@@ -103,7 +103,7 @@
             <th scope="row">{{ loop.index }}</th>
             <td>{{ file.name }}</td>
             <td class="text-center">
-                {% set fileExtension = file.name|split('.')|last %}
+                {% set fileExtension = file.name|split('.')|last|lower %}
                 {{ fileExtension }}
             </td>
             <td>{{ file.size }}</td>
@@ -139,9 +139,9 @@
 
         tableRows.forEach(row => {
             const fileName = row.querySelector('td:nth-child(2)').textContent;
-            const fileExtension = fileName.slice(((fileName.lastIndexOf(".") - 1) >>> 0) + 2);
+            const fileExtension = fileName.slice(((fileName.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase();
 
-            fileTypes.add(fileExtension);
+                fileTypes.add(fileExtension.toLowerCase());
         });
 
         fileTypes.forEach(type => {
