@@ -26,19 +26,19 @@
                 
                 {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control', 'placeholder': 'Email'}}) }}
                 <span class="text-danger">{{ form_errors(registrationForm.email) }}</span>
-<br>
+                <br>
                 <div class="row">
                     <div class="col-md-6">
                         {{ form_widget(registrationForm.first_name, {'attr': {'class': 'form-control', 'placeholder': 'Prénom'}}) }}
                         <span class="text-danger">{{ form_errors(registrationForm.first_name) }}</span>
                     </div>
-<br>
+                <br>
                     <div class="col-md-6">
                         {{ form_widget(registrationForm.last_name, {'attr': {'class': 'form-control', 'placeholder': 'Nom'}}) }}
                         <span class="text-danger">{{ form_errors(registrationForm.last_name) }}</span>
                     </div>
                 </div>
-<br>
+                <br>
                 {{ form_widget(registrationForm.phone_number, {'attr': {'class': 'form-control', 'placeholder': 'Numéro de téléphone'}}) }}
                 <span class="text-danger">{{ form_errors(registrationForm.phone_number) }}</span>
                 
