@@ -176,11 +176,22 @@ public function viewFile($id, FileRepository $fileRepository): Response
         throw $this->createNotFoundException('File not found or you do not have permission to view it.');
     }
 
-    $isPdf = (pathinfo($file->getFile(), PATHINFO_EXTENSION) === 'pdf');
+    $fileExtension = pathinfo($file->getFile(), PATHINFO_EXTENSION);
+
+    $isPdf = in_array($fileExtension, ['pdf']);
+    $isImage = in_array($fileExtension, ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'webp', 'svg', 'tiff']);
+    $isVideo = in_array($fileExtension, ['mp4', 'avi', 'mov']);
+    $isAudio = in_array($fileExtension, ['mp3', 'wav']);
+    $isDocument = in_array($fileExtension, ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt']);
+    
 
     return $this->render('file/view.html.twig', [
         'file' => $file,
         'isPdf' => $isPdf,
+        'isImage' => $isImage,
+        'isVideo' => $isVideo,
+        'isAudio' => $isAudio,
+        'isDocument' => $isDocument,
     ]);
 }
 
