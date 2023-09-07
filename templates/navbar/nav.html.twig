@@ -1,6 +1,8 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" {% if not app.user %}style="display: none"{% endif %}>
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Saving Safe</a>
+        <a class="navbar-brand" href="{{ path('app_file') }}">
+            <img src="{{ asset('logo/LogoSavinSafe_white.png') }}" alt="Saving Safe" style="width: 250px; height: auto;">
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -34,7 +36,9 @@
             </ul>
         </div>
 
-        <a href="{{ path('app_logout') }}" {% if app.request.pathInfo == '/logout' %}class="menu-current"{% endif %} onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Se déconnecter</a>
+        <a href="{{ path('app_logout') }}" {% if app.request.pathInfo == '/logout' %}class="menu-current"{% endif %} onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <img src="{{ asset('logo/logout_icon.png') }}" alt="Se déconnecter" style="width: 50px; height: auto;" />
+        </a>
 
         <form id="logout-form" action="{{ path('app_logout') }}" method="post" style="display: none;">
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
