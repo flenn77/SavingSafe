@@ -30,7 +30,8 @@
                 <tr>
                     <th scope="row">{{ loop.index }}</th>
                     <td>{{ client.getFullName() }}</td>
-                    <td>{{ client.usedspace }} Go</td>
+                    <td>{{ client.usedspace|number_format(9, '.', ',') }} Go</td>
+
                     <td>{{ client.totalspace }} Go</td>
                     <td>
                         {% set percentage = (client.usedspace / client.totalspace) * 100 %}
