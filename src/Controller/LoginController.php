@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,5 +36,11 @@ class LoginController extends AbstractController
             'last_username' => $lastUsername,
             'error'         => $error,
         ]);
+    }
+
+    #[Route('/forgot-password', name: 'app_forgot_password')]
+    public function forgotPassword(Request $request, MailerInterface $mailer): Response
+    {
+        // traiter le formulaire et envoyer un e-mail de réinitialisation ici
     }
 }
