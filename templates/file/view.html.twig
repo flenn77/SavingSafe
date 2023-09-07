@@ -3,23 +3,31 @@
 
 {% block body %}
 <div class="container mt-5">
-    <div class="card">
-        <div class="card-header">
+
+    <!-- File Card -->
+    <div class="card shadow-sm">
+        
+        <!-- Header -->
+        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
             {{ file.name }}
-            <a href="{{ path('app_file') }}" class="btn btn-primary float-right">Retour</a>
+            <a href="{{ path('app_file') }}" class="btn btn-light">Retour</a>
         </div>
+
+        <!-- Body -->
         <div class="card-body">
             {% if isPdf %}
                 <embed src="{{ path('app_file_serve', {'filename': file.getFile}) }}" type="application/pdf" class="w-100" style="height:80vh;" />
             {% else %}
-                <img src="{{ path('app_file_serve', {'filename': file.getFile}) }}" alt="Image" class="img-fluid rounded">
+                <img src="{{ path('app_file_serve', {'filename': file.getFile}) }}" alt="{{ file.name }}" class="img-fluid rounded shadow">
             {% endif %}
         </div>
-        <div class="card-footer">
+
+        <!-- Footer -->
+        <div class="card-footer d-flex justify-content-end">
             <a href="{{ path('file_delete', {'id': file.id}) }}" class="btn btn-danger" onclick="return confirm('Voulez-vous vraiment supprimer ce fichier?');">Supprimer</a>
         </div>
+
     </div>
 </div>
 
 {% endblock %}
-

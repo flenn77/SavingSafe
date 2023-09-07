@@ -1,18 +1,22 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-<meta charset="UTF-8">
 
+<meta charset="UTF-8">
 
 <div class="container mt-5">
 
-{% for message in app.flashes('error') %}
-    <div class="alert alert-danger text-center" role="alert">
+    {% for message in app.flashes('error') %}
+    <div class="alert alert-danger text-center alert-dismissible fade show" role="alert">
         {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
-{% endfor %}
-    <h2 class="text-center">Vos factures</h2>
+    {% endfor %}
 
-    <table class="table table-striped mt-4">
+    <h2 class="text-center mb-5 animated fadeIn">Vos factures</h2> <!-- fadeIn animation added -->
+
+    <table class="table table-hover animated fadeInUp"> <!-- fadeInUp animation added -->
         <thead class="thead-dark">
             <tr>
                 <th>Numéro de Facture</th>
@@ -37,7 +41,4 @@
     </table>
 </div>
 
-
-
 {% endblock %}
-

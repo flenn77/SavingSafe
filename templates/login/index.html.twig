@@ -1,7 +1,11 @@
-{% extends 'base.html.twig' %}
+
 {% block title %}Connexion{% endblock %}
 
 {% block stylesheets %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css'>
     <link rel="stylesheet" href="{{ asset('css/login.css') }}">
 {% endblock %}
@@ -13,7 +17,7 @@
         <div class="logo">
             <!-- <img src="{{ asset('build/images/LogoSavinSafe.png') }}" class="img img-responsive img-circle center-block"/>   -->
             <h1 class="logo-caption"><span class="tweak">Se Connecter</span></h1>
-        </div><!-- /.logo -->
+        </div>
         <div class="controls">
             {% if error %}
                 <div class="alert alert-danger">
@@ -32,6 +36,7 @@
             <form action="{{ path('app_login') }}" method="post">
                 <input type="text" name="_username" placeholder="Email" class="form-control" value="{{ last_username }}" style="margin-bottom:7px" />
                 <input type="password" name="_password" placeholder="Password" class="form-control"  style="margin-bottom:20px" />
+                {# <a href="{{ path('app_forgot_password') }}">Mot de passe oublié ?</a> #}
                 <input type="hidden" name="_target_path" value="/">
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 <button type="submit" class="btn btn-default btn-block btn-custom">Login</button>

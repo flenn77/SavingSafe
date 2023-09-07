@@ -7,10 +7,11 @@
 {% block body %}
 
 <div class="container mt-5">
-    <h1 class="text-center mb-4">Facture N° {{ invoice.invoiceNumber }}</h1>
+    <h1 class="text-center mb-5 display-4">Facture N° {{ invoice.invoiceNumber }}</h1>
 
-    <div class="card mb-4">
-        <div class="card-header">
+    <!-- Client Information -->
+    <div class="card mb-5 shadow-sm">
+        <div class="card-header bg-primary text-white">
             Informations du client
         </div>
         <div class="card-body">
@@ -21,8 +22,9 @@
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header">
+    <!-- Invoice Details -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
             Détails de la facture
         </div>
         <div class="card-body">
@@ -31,10 +33,13 @@
         </div>
     </div>
 
-    <!-- Ajout du bouton pour rediriger vers la page des factures de l'utilisateur -->
-    <div class="mt-4 text-center">
-        <a href="{{ path('user_invoices') }}" class="btn btn-primary">Voir toutes mes factures</a>
+    <!-- Back to invoices button -->
+    <div class="mt-5 text-center">
+        <a href="{{ path('user_invoices') }}" class="btn btn-primary btn-lg shadow-sm">Voir toutes mes factures</a>
     </div>
 </div>
+
+
+
 
 {% endblock %}
