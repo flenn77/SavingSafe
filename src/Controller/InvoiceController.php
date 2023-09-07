@@ -56,7 +56,7 @@ class InvoiceController extends AbstractController
             return $this->redirectToRoute('user_invoices');
         }
     
-        return $this->render('invoice.html.twig', [
+        return $this->render('invoice/invoice.html.twig', [
             'invoice' => $invoice
         ]);
     }
