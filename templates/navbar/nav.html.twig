@@ -20,9 +20,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                <li class="nav-item {% if app.request.attributes.get('_route') == 'app_account' %}active{% endif %}">
+                {# <li class="nav-item {% if app.request.attributes.get('_route') == 'app_account' %}active{% endif %}">
                     <a class="nav-link" aria-current="page" href="{{ path("app_account") }}">Profil</a>
-                </li>
+                </li> #}
                 {% if app.user is defined and app.user.roles is defined and 'ROLE_ADMIN' in app.user.roles %}
                     <li class="nav-item {% if app.request.attributes.get('_route') == 'app_client' %}active{% endif %}">
                         <a class="nav-link" aria-current="page" href="{{ path('app_client') }}">Liste des clients</a>
@@ -47,6 +47,10 @@
                 {% endif %}
             </ul>
         </div>
+
+        <a class="nav-link" aria-current="page" href="{{ path("app_account") }}" style="margin-right: 15px;">
+            <img src="{{ asset('logo/profile_icon.png') }}" alt="Profil" style="width: 50px; height: auto;" />
+        </a>
 
         <a href="{{ path('app_logout') }}" {% if app.request.pathInfo == '/logout' %}class="menu-current logout-icon"{% endif %} onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
             <img src="{{ asset('logo/logout_icon.png') }}" alt="Se déconnecter" style="width: 50px; height: auto;" />
