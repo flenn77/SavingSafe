@@ -142,11 +142,15 @@
         </div>
     </div>
 
-    <div class="mb-3 mt-5 text-center">
-    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
-        Supprimer mon compte
-    </button>
-</div>
+    {% if app.user and 'ROLE_ADMIN' not in app.user.roles %}
+        <div class="mb-3 mt-5 text-center">
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+                Supprimer mon compte
+            </button>
+        </div>
+    {% endif %}
+
+
 
     <!-- Modal -->
     
