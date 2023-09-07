@@ -2,20 +2,62 @@
 
 {% block title %}Profil{% endblock %}
 
+{% block stylesheets %}
+<!-- Vous pouvez ajouter ici d'autres feuilles de style pour la page -->
+<style>
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity 1s;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active dans <2.1.8 */ {
+        opacity: 0;
+    }
+</style>
+{% endblock %}
+
 {% block body %}
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const confirmButton = document.getElementById('confirmButton');
+        const confirmDelete = document.getElementById('confirmDelete');
+
+        confirmButton.disabled = true;
+        confirmDelete.addEventListener('input', function() {
+            if (confirmDelete.value === 'SUPPRIMER') {
+                confirmButton.disabled = false;
+            } else {
+                confirmButton.disabled = true;
+            }
+        });
+        
+        confirmButton.addEventListener('click', function() {
+            if (confirmDelete.value === 'SUPPRIMER') {
+                window.location.href = "{{ path('app_account_delete') }}";
+            } else {
+                alert('Veuillez écrire SUPPRIMER pour confirmer.');
+            }
+        });
+    });
+</script>
+
     <div class="container mt-5">
 
     {% for message in app.flashes('success') %}
-    <div class="alert alert-success">
+    <div class="alert alert-success fade">
         {{ message }}
     </div>
-{% endfor %}
+    {% endfor %}
 
-{% for message in app.flashes('error') %}
-    <div class="alert alert-danger">
+    {% for message in app.flashes('error') %}
+    <div class="alert alert-danger fade">
         {{ message }}
     </div>
-{% endfor %}
+    {% endfor %}
+
+
+
+
         <!-- Profil Form -->
         <div class="card">
             <div class="card-header">
@@ -102,9 +144,10 @@
     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
         Supprimer mon compte
     </button>
-    </div>
+</div>
 
     <!-- Modal -->
+    
     <div class="modal fade" id="deleteAccountModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -124,20 +167,30 @@
             </div>
         </div>
     </div>
-
+    <br>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const confirmButton = document.getElementById('confirmButton');
-            const confirmDelete = document.getElementById('confirmDelete');
-            
-            confirmButton.addEventListener('click', function() {
-                if (confirmDelete.value === 'SUPPRIMER') {
-                    window.location.href = "{{ path('app_account_delete') }}";
-                } else {
-                    alert('Veuillez écrire SUPPRIMER pour confirmer.');
-                }
-            });
-        });
-    </script>
+document.addEventListener("DOMContentLoaded", function() {
+    const confirmButton = document.getElementById('confirmButton');
+    const confirmDelete = document.getElementById('confirmDelete');
+    
+    confirmButton.disabled = true;
+    confirmDelete.addEventListener('input', function() {
+        if (confirmDelete.value === 'SUPPRIMER') {
+            confirmButton.disabled = false;
+        } else {
+            confirmButton.disabled = true;
+        }
+    });
+
+    confirmButton.addEventListener('click', function() {
+        if (confirmDelete.value === 'SUPPRIMER') {
+            window.location.href = "{{ path('app_account_delete') }}";
+        } else {
+            alert('Veuillez écrire SUPPRIMER pour confirmer.');
+        }
+    });
+});
+</script>
 
 {% endblock %}
+
